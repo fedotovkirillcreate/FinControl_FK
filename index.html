@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReconFlow Commerce MVP</title>
+  <style>
+    :root{
+      color-scheme:dark;
+      --bg:#06101f;--bg2:#0a1425;--panel:#0c1527ee;--panel2:#0a1020;--line:#27324f;--text:#f8fafc;--muted:#98a7c4;
+      --blue:#3b82f6;--blue2:#1d4ed8;--green:#22c55e;--amber:#f59e0b;--rose:#fb7185;--cyan:#22d3ee;
+      --shadow:0 24px 80px rgba(0,0,0,.22);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--text)}
+    button,input,select{font:inherit}
+    .app{max-width:1400px;margin:0 auto;padding:20px 20px 64px}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:var(--shadow)}
+    .hero{display:grid;grid-template-columns:1.12fr .88fr;gap:18px;align-items:stretch}
+    .heroMain{position:relative;overflow:hidden;background:linear-gradient(180deg,#0f1a31,#0a1020);border:1px solid var(--line);border-radius:30px;padding:28px;box-shadow:var(--shadow)}
+    .heroMain::before,.heroMain::after{content:"";position:absolute;border-radius:999px;filter:blur(18px);opacity:.32;pointer-events:none}
+    .heroMain::before{width:280px;height:280px;background:#2563eb;top:-120px;right:-80px}
+    .heroMain::after{width:180px;height:180px;background:#22c55e;bottom:-60px;left:-40px}
+    .nav{position:sticky;top:10px;z-index:20;margin-bottom:14px;padding:12px 14px;background:rgba(7,12,24,.72);border:1px solid var(--line);backdrop-filter:blur(12px);border-radius:18px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+    .nav a{color:#dbe7ff;text-decoration:none;font-size:14px;padding:10px 12px;border-radius:12px}
+    .nav a:hover{background:#ffffff0d}.navLinks{display:flex;gap:6px;flex-wrap:wrap}.logo{font-weight:700;letter-spacing:.02em}
+    .badge{display:inline-flex;padding:8px 12px;border-radius:999px;background:#2563eb22;color:#bfdbfe;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+    h1{font-size:clamp(40px,6vw,66px);line-height:1;margin:16px 0 12px;position:relative}h2{margin:0;font-size:30px}h3{margin:0 0 10px}.muted{color:var(--muted);line-height:1.75}
+    .actions,.row{display:flex;gap:12px;align-items:center}.between{justify-content:space-between}.right{justify-content:flex-end}.topGap{margin-top:28px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 16px;border-radius:16px;border:1px solid transparent;cursor:pointer;color:#fff;text-decoration:none;transition:.2s transform,.2s opacity,.2s background,.2s border-color}.btn:hover{transform:translateY(-1px)}
+    .primary{background:linear-gradient(180deg,var(--blue),var(--blue2))}.secondary{background:#0f172acc;border-color:var(--line)}.ghost{background:#22c55e12;color:#dcfce7;border-color:#22c55e3d}.amberBtn{background:#f59e0b12;color:#fde68a;border-color:#f59e0b3d}
+    .grid2,.grid3,.grid4,.grid5,.grid6{display:grid;gap:16px}.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid4{grid-template-columns:repeat(4,minmax(0,1fr))}.grid5{grid-template-columns:repeat(5,minmax(0,1fr))}.grid6{grid-template-columns:repeat(6,minmax(0,1fr))}
+    .big{font-size:34px;font-weight:800;margin-top:8px}.medium{font-size:28px;font-weight:800;margin-top:8px}.small{font-size:14px}
+    .mini{font-size:12px}.stack{display:grid;gap:12px}.heroMiniCard{background:#091221c9;border:1px solid #31415f;border-radius:20px;padding:18px;position:relative}
+    .stepBox{display:grid;grid-template-columns:36px 1fr;gap:10px;padding:12px;border-radius:18px;background:#0a1020;border:1px solid var(--line)}.stepBox span{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:999px;background:#2563eb22;color:#bfdbfe;font-weight:700}
+    .toggle{display:inline-grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:6px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}.toggle button{min-height:40px;padding:0 16px;border:0;background:transparent;color:var(--muted);border-radius:12px;cursor:pointer}.toggle .active{background:#2563eb22;color:#fff}
+    .sourceCard{position:relative;overflow:hidden;cursor:pointer;transition:.2s transform,.2s border-color,.2s box-shadow}.sourceCard:hover{transform:translateY(-2px)}.sourceCard.active{border-color:#3b82f6;box-shadow:0 0 0 1px rgba(59,130,246,.55),var(--shadow)}
+    .sourceCard .count{position:absolute;right:16px;top:16px;min-width:32px;height:32px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:#0f172a;border:1px solid var(--line);font-size:13px;color:#dbe7ff}
+    .sourceCard .icon{width:42px;height:42px;border-radius:14px;background:#0a1020;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
+    .bullet,.flow,.issueBox,.effectLine,.search,.barBox,.dayBtn,.tagChip,.comparePanel{background:#0a1020;border:1px solid var(--line);border-radius:16px}
+    .bullet,.flow,.issueBox,.barBox,.comparePanel{padding:14px}.comparePanel strong{display:block;margin-bottom:6px}
+    .search{display:flex;align-items:center;gap:8px;padding:0 12px;height:46px}.search input{border:0;outline:0;background:transparent;color:#fff;min-width:220px;width:100%}
+    .filters{display:flex;gap:12px;flex-wrap:wrap}.filters select{height:46px;border-radius:16px;border:1px solid var(--line);background:var(--panel);color:#fff;padding:0 12px}.tagRow{display:flex;gap:8px;flex-wrap:wrap}.tagChip,.dayBtn{padding:10px 12px;color:#dbe7ff;cursor:pointer}.tagChip.active,.dayBtn.active{background:#2563eb22;border-color:#3b82f6;color:#fff}
+    .tableWrap{overflow:auto;border-radius:20px;border:1px solid var(--line)}.tableWrap table{width:100%;min-width:1080px;border-collapse:collapse}.tableWrap th,.tableWrap td{padding:14px 16px;text-align:left;border-top:1px solid var(--line)}.tableWrap th{border-top:0;background:#08101c;color:var(--muted);position:sticky;top:0}.tableWrap tr{transition:.15s background}.tableWrap tbody tr:hover{background:#ffffff08;cursor:pointer}.tableWrap tr.selected{background:#2563eb14}
+    .strong{font-weight:700;color:#fff}.pill{display:inline-flex;min-height:28px;align-items:center;justify-content:center;padding:0 12px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid transparent}.ok{background:#22c55e1a;color:#bbf7d0;border-color:#22c55e33}.auto{background:#2563eb1f;color:#bfdbfe;border-color:#2563eb3d}.warn{background:#f59e0b1f;color:#fde68a;border-color:#f59e0b3d}
+    .issueTitle{margin-top:6px;color:#dbe4f1}.issueBox p{margin:8px 0 0}.issueHead{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700}.effectLine{display:flex;align-items:center;justify-content:space-between;padding:14px;margin-top:12px}.barLabel{display:flex;justify-content:space-between;gap:10px;margin-bottom:8px}.barTrack{height:12px;border-radius:999px;background:#13203a;overflow:hidden}.barFill{height:100%;border-radius:999px;background:linear-gradient(90deg,#2563eb,#22c55e);transform-origin:left center;transform:scaleX(0);animation:grow 1.2s ease forwards}
+    @keyframes grow{to{transform:scaleX(1)}}
+    .detailPanel{position:sticky;top:92px;height:max-content}.detailGrid{display:grid;gap:10px;margin-top:14px}.detailItem{padding:12px;border-radius:14px;background:#0a1020;border:1px solid var(--line)}
+    .finalPanel{display:grid;grid-template-columns:1.08fr .92fr;gap:18px;align-items:center}
+    .metricPulse{position:relative;overflow:hidden}.metricPulse::after{content:"";position:absolute;inset:-30%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);transform:translateX(-120%);animation:shine 7s linear infinite}
+    @keyframes shine{to{transform:translateX(120%)}}
+    .overlay{position:fixed;inset:0;background:rgba(2,6,14,.72);backdrop-filter:blur(6px);display:none;align-items:flex-end;justify-content:center;padding:18px;z-index:50}.overlay.show{display:flex}.overlayCard{width:min(860px,100%);background:#08101cf5;border:1px solid #344161;border-radius:24px;padding:22px}
+    .iconBtn{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:transparent;color:#fff;cursor:pointer}.progress{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:14px}.dot{height:6px;border-radius:999px;background:#94a3b833}.dot.active{background:linear-gradient(90deg,#2563eb,#22c55e)}.spotlight{box-shadow:0 0 0 1px rgba(37,99,235,.55),0 0 0 8px rgba(37,99,235,.08),0 24px 80px rgba(0,0,0,.18)}
+    .tourBadge{display:inline-flex;margin-left:8px;padding:6px 10px;border-radius:999px;background:#22c55e14;color:#bbf7d0;font-size:12px}
+    .footer{margin-top:30px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    @media(max-width:1180px){.hero,.grid2,.finalPanel{grid-template-columns:1fr}.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}.grid5{grid-template-columns:repeat(3,minmax(0,1fr))}.grid6{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(max-width:780px){.app{padding:14px 14px 40px}.grid3,.grid4,.grid5,.grid6,.grid2{grid-template-columns:1fr}.actions,.row,.filters{flex-direction:column;align-items:stretch}.nav{position:static}.search input{min-width:0}.detailPanel{position:static}.heroMain,.card{padding:18px}.finalPanel{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <nav class="nav">
+    <div class="logo">ReconFlow Commerce</div>
+    <div class="navLinks">
+      <a href="#sources">Источники</a>
+      <a href="#registry">Реестр</a>
+      <a href="#exceptions">Исключения</a>
+      <a href="#analytics">Аналитика</a>
+      <a href="#defense">Финальный экран</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="heroMain metricPulse">
+      <div class="badge">Стартап-диплом • Публикуемый MVP</div>
+      <h1>ReconFlow Commerce</h1>
+      <p class="muted">Интерактивная платформа автоматизированного учёта и контроля расчётных операций для e-commerce-компании, которая продаёт товары онлайн, работает через посредников по доставке и реализует цифровые лицензии.</p>
+      <div class="actions topGap">
+        <button class="btn primary" onclick="document.getElementById('analytics').scrollIntoView({behavior:'smooth'})">Перейти к дашборду</button>
+        <button class="btn secondary" onclick="startTour()">▶ Как платформа обрабатывает данные</button>
+        <button class="btn amberBtn" onclick="document.getElementById('defense').scrollIntoView({behavior:'smooth'})">Сценарий защиты</button>
+      </div>
+      <div class="grid3 topGap">
+        <div class="heroMiniCard"><div class="muted small">Операций за неделю</div><div class="big counter" data-target="20">0</div></div>
+        <div class="heroMiniCard"><div class="muted small">Проблемных кейсов</div><div class="big counter" data-target="8">0</div></div>
+        <div class="heroMiniCard"><div class="muted small">Эффект в месяц</div><div class="big">44 400 ₽</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="row between"><div><h3>Сценарий демонстрации</h3><p class="muted">Одна неделя работы компании: товары + лицензии.</p></div><span class="tourBadge">45–60 секунд</span></div>
+      <div class="stack topGap">
+        <div class="stepBox"><span>1</span><div>Сначала комиссия видит готовый dashboard и ключевые метрики продукта.</div></div>
+        <div class="stepBox"><span>2</span><div>По кнопке запускается guided walkthrough: источники → нормализация → сопоставление → исключения → результат.</div></div>
+        <div class="stepBox"><span>3</span><div>Ниже можно кликать по строкам операций, фильтровать неделю и изучать проблемные кейсы.</div></div>
+        <div class="stepBox"><span>4</span><div>В финале показывается эффект: 11 100 ₽ за неделю и 44 400 ₽ в месяц.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="row between topGap">
+    <div>
+      <h2>Режим демонстрации</h2>
+      <p class="muted">Покажи контраст между состоянием компании до платформы и после её запуска.</p>
+    </div>
+    <div class="toggle">
+      <button id="beforeBtn" onclick="setMode('before')">До платформы</button>
+      <button id="afterBtn" class="active" onclick="setMode('after')">После платформы</button>
+    </div>
+  </section>
+
+  <section class="grid4 topGap">
+    <div class="card"><div class="muted small">Источников данных</div><div class="medium" id="metricSources">6</div></div>
+    <div class="card"><div class="muted small">Автоматически закрыто</div><div class="medium" id="metricAutoTop">16</div></div>
+    <div class="card"><div class="muted small">Исключения</div><div class="medium" id="metricExceptionsTop">4</div></div>
+    <div class="card"><div class="muted small">Эффект за неделю</div><div class="medium" id="metricWeeklyTop">11 100 ₽</div></div>
+  </section>
+
+  <section id="sources" class="topGap">
+    <div class="row between"><div><h2>Источники данных</h2><p class="muted">Кликни на источник, чтобы отфильтровать связанные операции в реестре ниже.</p></div><button class="btn secondary" onclick="clearSourceFilter()">Сбросить источник</button></div>
+    <div class="grid3 topGap" id="sourceGrid"></div>
+  </section>
+
+  <section class="grid2 topGap">
+    <div class="card">
+      <h3 id="modeTitle">Состояние после платформы</h3>
+      <div class="stack" id="modeList"></div>
+      <div class="grid2 topGap">
+        <div class="comparePanel"><strong>Без платформы</strong><span class="muted">Разрозненные таблицы, ручная сверка, непрозрачные удержания, ошибки периода по лицензиям.</span></div>
+        <div class="comparePanel"><strong>С платформой</strong><span class="muted">Единый реестр операций, центр исключений, прозрачная аналитика и измеримый экономический эффект.</span></div>
+      </div>
+    </div>
+    <div class="card" id="architecture">
+      <h3>Архитектура платформы</h3>
+      <div class="stack">
+        <div class="flow">1. Источники данных</div>
+        <div class="flow">2. Нормализация и единый профиль операции</div>
+        <div class="flow">3. Сопоставление заказа, платежа, возврата и выплаты</div>
+        <div class="flow">4. Правила интерпретации для товаров и лицензий</div>
+        <div class="flow">5. Центр исключений</div>
+        <div class="flow">6. Аналитика и расчёт эффекта</div>
+      </div>
+    </div>
+  </section>
+
+  
+  <section id="simulator" class="topGap">
+    <div class="row between">
+      <div>
+        <h2>Симулятор входящих операций</h2>
+        <p class="muted">Добавляй заранее подготовленные кейсы и смотри, как платформа в реальном времени обновляет реестр, исключения и итоговую аналитику.</p>
+      </div>
+      <div class="actions">
+        <button class="btn secondary" onclick="resetScenario()">Сбросить сценарий</button>
+      </div>
+    </div>
+    <div class="grid2 topGap">
+      <div class="card">
+        <div class="grid2" id="scenarioGrid"></div>
+      </div>
+      <div class="card metricPulse">
+        <div class="row between"><h3>Состояние сценария</h3><span class="pill auto" id="scenarioState">0 добавлено</span></div>
+        <p class="muted" id="scenarioLead">Выбери один или несколько кейсов. Новые операции сразу попадут в реестр платформы и изменят dashboard.</p>
+        <div class="detailGrid" id="scenarioFeed">
+          <div class="detailItem"><div class="muted mini">Поток событий</div><div class="strong" style="margin-top:6px">Пока добавочных операций нет</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="registry" class="topGap">
+    <div class="row between">
+      <div>
+        <h2>Единый реестр операций</h2>
+        <p class="muted">Кликабельный реестр: фильтруй неделю по дням, типам и статусам, открывай детали операции и наблюдай, как метрики пересчитываются в реальном времени.</p>
+      </div>
+    </div>
+    <div class="grid2 topGap" style="align-items:start;grid-template-columns:1.25fr .75fr">
+      <div>
+        <div class="filters">
+          <div class="search"><span>⌕</span><input id="searchInput" placeholder="Поиск по ID, каналу или проблеме"/></div>
+          <select id="statusFilter"><option value="all">Все статусы</option><option>Сопоставлено</option><option>Автокоррекция</option><option>Автосвязка</option><option>Исключение</option></select>
+          <select id="typeFilter"><option value="all">Все типы</option><option>Товар</option><option>Лицензия</option></select>
+        </div>
+        <div class="tagRow topGap" id="dayRow"></div>
+        <div class="tagRow topGap">
+          <button class="tagChip active" data-tag="all" onclick="setQuickTag('all', event)">Все кейсы</button>
+          <button class="tagChip" data-tag="risk" onclick="setQuickTag('risk', event)">Только риск</button>
+          <button class="tagChip" data-tag="auto" onclick="setQuickTag('auto', event)">Автоматически обработанные</button>
+          <button class="tagChip" data-tag="money" onclick="setQuickTag('money', event)">С денежным эффектом</button>
+        </div>
+        <div class="tableWrap topGap">
+          <table>
+            <thead><tr><th>ID</th><th>День</th><th>Тип</th><th>Канал</th><th>Сумма</th><th>Комиссия</th><th>Статус</th><th>Проблема</th><th>Эффект</th></tr></thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card detailPanel">
+        <div class="row between"><h3>Карточка операции</h3><span class="pill auto" id="detailStatus">Выбери строку</span></div>
+        <p class="muted" id="detailLead">Нажми на любую операцию в реестре, чтобы открыть детальную интерпретацию кейса: источник, риск, сумму и действие платформы.</p>
+        <div class="detailGrid" id="detailGrid">
+          <div class="detailItem"><div class="muted mini">Что здесь можно показать</div><div class="strong" style="margin-top:6px">Товары, лицензии, скрытые удержания, возвраты и ошибки периода</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="exceptions" class="topGap">
+    <div class="row between"><div><h2>Центр исключений</h2><p class="muted">Здесь остаются только нестандартные операции, которые требуют решения или подтверждения.</p></div><button class="btn secondary" onclick="focusExceptions()">Показать только исключения</button></div>
+    <div class="grid2 topGap" id="exceptionGrid"></div>
+  </section>
+
+  <section id="analytics" class="topGap">
+    <h2>Аналитика эффекта</h2>
+    <p class="muted">Итоговый результат, который видит комиссия на dashboard.</p>
+    <div class="grid5 topGap">
+      <div class="card"><div class="muted small">Операций за неделю</div><div class="big" id="metricTotal">20</div></div>
+      <div class="card"><div class="muted small">Автоматически закрыто</div><div class="big" id="metricAutoMain">16</div></div>
+      <div class="card"><div class="muted small">Исключений</div><div class="big" id="metricExceptionsMain">4</div></div>
+      <div class="card"><div class="muted small">Эффект за неделю</div><div class="big" id="metricWeeklyMain">11 100 ₽</div></div>
+      <div class="card"><div class="muted small">Потенциал в месяц</div><div class="big" id="metricMonthlyMain">44 400 ₽</div></div>
+    </div>
+    <div class="grid2 topGap">
+      <div class="card">
+        <h3>Статусы обработки</h3>
+        <div id="statusBars"></div>
+      </div>
+      <div class="card">
+        <h3>Из чего состоит экономия</h3>
+        <div id="effectBars"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="defense" class="topGap">
+    <div class="card finalPanel">
+      <div>
+        <div class="badge">Финальный акцент продукта</div>
+        <h3 style="font-size:34px;margin-top:14px">MVP готов к интерактивной демонстрации</h3>
+        <p class="muted">Сайт показывает не только итоговый dashboard, но и логику платформы: от поступления операций в реестр до автоматической сверки, центра исключений и финальной аналитики.</p>
+        <div class="stack topGap">
+          <div class="bullet"><strong class="strong">Интерактивный сценарий:</strong><br>пользователь добавляет операции из заранее подготовленных кейсов, а платформа пересчитывает реестр, статусы обработки и эффект в реальном времени.</div>
+          <div class="bullet"><strong class="strong">Практический результат:</strong><br>в одном контуре видны товары, лицензии, удержания, возвраты, исключения и итоговый финансовый эффект.</div>
+        </div>
+        <div class="actions topGap">
+          <button class="btn primary" onclick="startTour()">Повторить walkthrough</button>
+          <button class="btn secondary" onclick="document.getElementById('simulator').scrollIntoView({behavior:'smooth'})">К симулятору операций</button>
+        </div>
+      </div>
+      <div class="card" style="min-height:260px;display:flex;flex-direction:column;justify-content:center;gap:12px;background:#0a1020">
+        <div class="muted small">Текущий итог</div>
+        <div class="big" id="finalWeeklyEffect" style="margin-top:0">11 100 ₽</div>
+        <div class="muted">предотвращённый эффект за неделю</div>
+        <div class="effectLine" style="margin-top:8px"><span class="muted">Потенциал в месяц</span><span class="strong" id="finalMonthlyEffect">44 400 ₽</span></div>
+        <div class="effectLine"><span class="muted">Автоматически закрыто</span><span class="strong" id="finalAutoClosed">16 / 20 операций</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    <div>ReconFlow Commerce • интерактивный MVP для стартап-диплома</div>
+    <div>Товары, посредники по доставке и цифровые лицензии в одном контрольном контуре</div>
+  </div>
+</div>
+
+<div id="overlay" class="overlay">
+  <div class="overlayCard">
+    <div class="row between"><div><div class="badge">Guided motion walkthrough</div><h3 id="overlayTitle">Сбор данных</h3></div><button class="iconBtn" onclick="stopTour()">✕</button></div>
+    <p class="muted" id="overlayText"></p>
+    <div class="progress" id="progress"></div>
+    <div class="row right topGap">
+      <button class="btn secondary" id="prevBtn" onclick="prevStep()">Назад</button>
+      <button class="btn primary" id="nextBtn" onclick="nextStep()">Следующий этап</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const baseOperations = [
+  {id:'ORD-001',day:'Пн',type:'Товар',channel:'Сайт',source:'oms',gross:12400,fee:620,status:'Сопоставлено',issue:'—',effect:0,effectBucket:'Ручная сверка',explain:'Типовая продажа через сайт. Платформа автоматически связала заказ, оплату и поступление в банк.'},
+  {id:'ORD-002',day:'Пн',type:'Товар',channel:'Маркетплейс',source:'marketplace',gross:8900,fee:712,status:'Сопоставлено',issue:'—',effect:0,effectBucket:'Ручная сверка',explain:'Штатная продажа через маркетплейс с корректно выделенной комиссией.'},
+  {id:'ORD-003',day:'Вт',type:'Товар',channel:'Сайт',source:'oms',gross:15600,fee:780,status:'Сопоставлено',issue:'—',effect:0,effectBucket:'Ручная сверка',explain:'Операция закрыта без вмешательства бухгалтера.'},
+  {id:'ORD-004',day:'Вт',type:'Товар',channel:'Маркетплейс',source:'marketplace',gross:6800,fee:544,status:'Сопоставлено',issue:'—',effect:0,effectBucket:'Ручная сверка',explain:'Платформа сверила отчёт площадки и фактическую выплату.'},
+  {id:'ORD-005',day:'Ср',type:'Товар',channel:'Сайт',source:'oms',gross:21300,fee:1065,status:'Сопоставлено',issue:'—',effect:0,effectBucket:'Ручная сверка',explain:'Типовой кейс сайта с прозрачной структурой комиссии.'},
+  {id:'ORD-006',day:'Ср',type:'Товар',channel:'Сайт',source:'bank',gross:10200,fee:510,status:'Сопоставлено',issue:'—',effect:0,effectBucket:'Ручная сверка',explain:'Поступление из банка сопоставлено по шаблону reference.'},
+  {id:'ORD-007',day:'Ср',type:'Товар',channel:'Маркетплейс',source:'marketplace',gross:4900,fee:392,status:'Сопоставлено',issue:'—',effect:0,effectBucket:'Ручная сверка',explain:'Комиссия площадки выделена автоматически.'},
+  {id:'ORD-008',day:'Чт',type:'Товар',channel:'Сайт',source:'logistics',gross:18700,fee:935,status:'Сопоставлено',issue:'—',effect:0,effectBucket:'Ручная сверка',explain:'Связаны заказ, доставка и зачисление средств.'},
+  {id:'ORD-009',day:'Чт',type:'Товар',channel:'Маркетплейс',source:'logistics',gross:13500,fee:1080,status:'Автокоррекция',issue:'Скрытое удержание логистики',effect:850,effectBucket:'Комиссии и удержания',explain:'Без платформы компания видела бы только недоплату. Платформа выделила дополнительное удержание логистики.'},
+  {id:'ORD-010',day:'Чт',type:'Товар',channel:'Сайт',source:'gateway',gross:9800,fee:490,status:'Автосвязка',issue:'Неидентифицированный возврат',effect:1300,effectBucket:'Возвраты и корректировки',explain:'Возврат жил отдельным событием. Платформа автоматически связала его с исходной продажей.'},
+  {id:'ORD-011',day:'Пт',type:'Товар',channel:'Маркетплейс',source:'marketplace',gross:11400,fee:912,status:'Исключение',issue:'Частичный возврат',effect:650,effectBucket:'Возвраты и корректировки',explain:'Частичный возврат отправлен в контролируемый центр исключений, чтобы избежать задвоения корректировки.'},
+  {id:'ORD-012',day:'Пт',type:'Товар',channel:'Сайт',source:'bank',gross:5600,fee:280,status:'Автосвязка',issue:'Банк без reference',effect:450,effectBucket:'Ручная сверка',explain:'Поступление найдено без прямого ID заказа, но платформа связала операцию по времени и сумме.'},
+  {id:'ORD-013',day:'Сб',type:'Товар',channel:'Маркетплейс',source:'marketplace',gross:16200,fee:1296,status:'Исключение',issue:'Подозрение на двойную комиссию',effect:1100,effectBucket:'Комиссии и удержания',explain:'Отклонение expected vs actual payout вынесено на ручную проверку.'},
+  {id:'ORD-014',day:'Сб',type:'Товар',channel:'Сайт',source:'oms',gross:14900,fee:745,status:'Сопоставлено',issue:'—',effect:0,effectBucket:'Ручная сверка',explain:'Штатная операция закрыта автоматически.'},
+  {id:'LIC-001',day:'Пн',type:'Лицензия',channel:'Биллинг',source:'billing',gross:3900,fee:195,status:'Сопоставлено',issue:'—',effect:0,effectBucket:'Ручная сверка',explain:'Платёж и срок действия лицензии сопоставлены автоматически.'},
+  {id:'LIC-002',day:'Вт',type:'Лицензия',channel:'Биллинг',source:'billing',gross:36000,fee:0,status:'Исключение',issue:'Годовая лицензия',effect:3000,effectBucket:'Лицензионная выручка',explain:'Платформа предотвращает ошибку: годовая лицензия не признаётся выручкой всей недели.'},
+  {id:'LIC-003',day:'Ср',type:'Лицензия',channel:'Биллинг',source:'billing',gross:5400,fee:270,status:'Сопоставлено',issue:'—',effect:0,effectBucket:'Ручная сверка',explain:'Типовое продление без отклонений.'},
+  {id:'LIC-004',day:'Пт',type:'Лицензия',channel:'Биллинг',source:'billing',gross:24000,fee:0,status:'Сопоставлено',issue:'—',effect:0,effectBucket:'Ручная сверка',explain:'Корректный кейс признания лицензионной выручки.'},
+  {id:'LIC-005',day:'Сб',type:'Лицензия',channel:'Партнёрский канал',source:'gateway',gross:18000,fee:1250,status:'Автокоррекция',issue:'Комиссия партнёра',effect:1250,effectBucket:'Комиссии и удержания',explain:'Чистое поступление разбито на gross revenue и partner fee.'},
+  {id:'LIC-006',day:'Вс',type:'Лицензия',channel:'Биллинг',source:'billing',gross:12000,fee:0,status:'Исключение',issue:'Платёж без связки с договором',effect:2500,effectBucket:'Лицензионная выручка',explain:'Платёж есть, но связь с договором и периодом потеряна, поэтому операция уходит в исключения.'}
+]
+const scenarioCatalog = [
+  {scenarioId:'SCN-01',label:'Маркетплейс: скрытое удержание',desc:'Добавляет новую продажу с недовыделенной логистикой.',op:{id:'ORD-015',day:'Вс',type:'Товар',channel:'Маркетплейс',source:'logistics',gross:17100,fee:1368,status:'Автокоррекция',issue:'Новое скрытое удержание логистики',effect:900,effectBucket:'Комиссии и удержания',explain:'Новый кейс из потока маркетплейса. Платформа мгновенно выделяет удержание и пересчитывает чистую выплату.'}},
+  {scenarioId:'SCN-02',label:'Сайт: возврат без привязки',desc:'Добавляет возврат, который приходит отдельным событием.',op:{id:'ORD-016',day:'Вс',type:'Товар',channel:'Сайт',source:'gateway',gross:7200,fee:360,status:'Автосвязка',issue:'Новый возврат без связки',effect:1100,effectBucket:'Возвраты и корректировки',explain:'Платформа связывает возврат с исходным заказом по сумме и времени, не давая исказить выручку.'}},
+  {scenarioId:'SCN-03',label:'Лицензия: ошибка периода',desc:'Добавляет годовую лицензию с риском неверного признания.',op:{id:'LIC-007',day:'Вс',type:'Лицензия',channel:'Биллинг',source:'billing',gross:48000,fee:0,status:'Исключение',issue:'Новая годовая лицензия',effect:3400,effectBucket:'Лицензионная выручка',explain:'Поступил новый лицензионный платёж. Платформа относит кейс к исключениям, чтобы не признать выручку целиком в текущей неделе.'}},
+  {scenarioId:'SCN-04',label:'Партнёрский канал: комиссия',desc:'Добавляет лицензию с чистым поступлением без выделения fee.',op:{id:'LIC-008',day:'Вс',type:'Лицензия',channel:'Партнёрский канал',source:'gateway',gross:22000,fee:1650,status:'Автокоррекция',issue:'Новая комиссия партнёра',effect:1650,effectBucket:'Комиссии и удержания',explain:'Платформа раскрывает структуру поступления: gross revenue и partner fee.'}},
+  {scenarioId:'SCN-05',label:'Нормальная продажа с сайта',desc:'Добавляет штатную операцию для контраста с рисковыми кейсами.',op:{id:'ORD-017',day:'Вс',type:'Товар',channel:'Сайт',source:'oms',gross:13400,fee:670,status:'Сопоставлено',issue:'—',effect:0,effectBucket:'Ручная сверка',explain:'Типовая продажа, которая без платформы ушла бы в ручную сверку, а здесь закрывается автоматически.'}}
+]
+const sourceMeta = [
+  {key:'oms',icon:'🛒',title:'Интернет-магазин / OMS',note:'Заказы и статусы отгрузки'},
+  {key:'marketplace',icon:'📦',title:'Маркетплейс',note:'Выплаты, комиссии, удержания'},
+  {key:'gateway',icon:'💳',title:'Платёжный шлюз',note:'Оплаты и reference транзакций'},
+  {key:'logistics',icon:'🚚',title:'Логистический посредник',note:'Доставка и логистические удержания'},
+  {key:'billing',icon:'🧾',title:'Биллинг лицензий',note:'Продления, сроки и договора'},
+  {key:'bank',icon:'🏦',title:'Банковская выписка',note:'Фактическое поступление денег'}
+]
+const modeMap = {
+  before: ['20 операций распределены между 6 источниками.','Часть выплат выглядит штатно, но содержит скрытые удержания.','Лицензионная выручка требует отдельной ручной интерпретации.','Закрытие недели зависит от ручной сверки и отдельных Excel-таблиц.'],
+  after: ['Операции собираются в единый поток данных.','Типовые кейсы закрываются автоматически, а отклонения не теряются.','Возвраты, удержания и партнёрские комиссии становятся прозрачными.','Компания получает единый расчётно-учётный результат и управленческую аналитику.']
+}
+const tour = [
+  {title:'Сбор данных',text:'Платформа получает события из 6 разрозненных источников: OMS, маркетплейса, банка, биллинга, логистики и платёжного шлюза.',target:'sources'},
+  {title:'Нормализация',text:'Все события приводятся к единому профилю операции — это делает сравнение, учёт и контроль воспроизводимыми.',target:'architecture'},
+  {title:'Сценарный поток',text:'Новые операции можно добавить прямо во время демонстрации. Платформа принимает кейс в реестр и сразу пересчитывает состояние системы.',target:'simulator'},
+  {title:'Сопоставление',text:'Система связывает заказ, платёж, возврат и выплату, а затем классифицирует кейс как штатный, автокорректируемый или проблемный.',target:'registry'},
+  {title:'Результат',text:'На выходе компания видит единый реестр, статус обработки и измеримый экономический эффект.',target:'analytics'}
+]
+let mode='after', step=0, timer=null, selectedId='ORD-009', sourceFilter='all', dayFilter='Все', quickTag='all'
+let scenarioIds = []
+const days=['Все','Пн','Вт','Ср','Чт','Пт','Сб','Вс']
+function fmt(n){return new Intl.NumberFormat('ru-RU',{style:'currency',currency:'RUB',maximumFractionDigits:0}).format(n)}
+function statusClass(s){return s==='Сопоставлено'?'ok':(s==='Исключение'?'warn':'auto')}
+function getCurrentOperations(){
+  const extra = scenarioCatalog.filter(x=>scenarioIds.includes(x.scenarioId)).map(x=>({...x.op, scenarioId:x.scenarioId}))
+  return [...baseOperations, ...extra]
+}
+function getMetrics(){
+  const ops = getCurrentOperations()
+  const autoResolved = ops.filter(x=>x.status==='Автокоррекция'||x.status==='Автосвязка').length
+  const matched = ops.filter(x=>x.status==='Сопоставлено').length
+  const exceptions = ops.filter(x=>x.status==='Исключение').length
+  const weekly = ops.reduce((s,x)=>s + (x.effect||0),0)
+  const sources = new Set(ops.map(x=>x.source)).size
+  return {ops, total:ops.length, matched, autoResolved, exceptions, weekly, monthly:weekly*4, autoClosed:matched+autoResolved}
+}
+function renderMode(){
+  document.getElementById('modeTitle').textContent = mode==='before'?'Состояние до платформы':'Состояние после платформы'
+  document.getElementById('beforeBtn').classList.toggle('active',mode==='before')
+  document.getElementById('afterBtn').classList.toggle('active',mode==='after')
+  document.getElementById('modeList').innerHTML = modeMap[mode].map(x => `<div class="bullet">${x}</div>`).join('')
+}
+function setMode(next){mode=next;renderMode()}
+function renderSources(){
+  const ops = getCurrentOperations()
+  document.getElementById('sourceGrid').innerHTML = sourceMeta.map(s => {
+    const count = ops.filter(x=>x.source===s.key).length
+    return `<div class="card sourceCard ${sourceFilter===s.key?'active':''}" onclick="setSourceFilter('${s.key}')">
+      <div class="count">${count}</div>
+      <div class="icon">${s.icon}</div>
+      <div class="strong">${s.title}</div>
+      <div class="muted small" style="margin-top:8px">${s.note}</div>
+    </div>`
+  }).join('')
+}
+function setSourceFilter(key){sourceFilter = sourceFilter===key?'all':key; renderAll()}
+function clearSourceFilter(){sourceFilter='all'; renderAll()}
+function renderDays(){
+  document.getElementById('dayRow').innerHTML = days.map(day => `<button class="dayBtn ${dayFilter===day?'active':''}" onclick="setDayFilter('${day}')">${day}</button>`).join('')
+}
+function setDayFilter(day){dayFilter=day;renderAll()}
+function setQuickTag(tag){quickTag=tag;document.querySelectorAll('.tagChip').forEach(x=>x.classList.toggle('active',x.dataset.tag===tag));renderRows()}
+function getFilteredOperations(){
+  const ops = getCurrentOperations()
+  const q=(document.getElementById('searchInput').value||'').toLowerCase().trim()
+  const status=document.getElementById('statusFilter').value
+  const type=document.getElementById('typeFilter').value
+  return ops.filter(x => {
+    const matchStatus = status==='all'||x.status===status
+    const matchType = type==='all'||x.type===type
+    const matchDay = dayFilter==='Все'||x.day===dayFilter
+    const matchSource = sourceFilter==='all'||x.source===sourceFilter
+    const matchSearch = !q || [x.id,x.type,x.channel,x.issue,x.status,x.day].join(' ').toLowerCase().includes(q)
+    const matchQuick = quickTag==='all' ? true : quickTag==='risk' ? x.status==='Исключение' : quickTag==='auto' ? (x.status==='Автокоррекция'||x.status==='Автосвязка') : quickTag==='money' ? x.effect>0 : true
+    return matchStatus && matchType && matchDay && matchSource && matchSearch && matchQuick
+  })
+}
+function renderRows(){
+  const rows = getFilteredOperations()
+  document.getElementById('rows').innerHTML = rows.map(x => `
+    <tr class="${selectedId===x.id?'selected':''}" onclick="selectOperation('${x.id}')">
+      <td class="strong">${x.id}</td><td>${x.day}</td><td>${x.type}</td><td>${x.channel}</td><td>${fmt(x.gross)}</td><td>${fmt(x.fee)}</td>
+      <td><span class="pill ${statusClass(x.status)}">${x.status}</span></td><td class="muted">${x.issue}</td><td>${x.effect?fmt(x.effect):'—'}</td>
+    </tr>`).join('') || `<tr><td colspan="9" class="muted">Нет операций под выбранные фильтры.</td></tr>`
+  if(!rows.find(x=>x.id===selectedId) && rows[0]) selectedId=rows[0].id
+  renderDetails()
+}
+function selectOperation(id){selectedId=id;renderRows();document.querySelector('.detailPanel').scrollIntoView({behavior:'smooth',block:'nearest'})}
+function renderDetails(){
+  const item = getCurrentOperations().find(x=>x.id===selectedId)
+  if(!item) return
+  document.getElementById('detailStatus').className = `pill ${statusClass(item.status)}`
+  document.getElementById('detailStatus').textContent = item.status
+  document.getElementById('detailLead').textContent = item.explain
+  document.getElementById('detailGrid').innerHTML = `
+    <div class="detailItem"><div class="muted mini">ID операции</div><div class="strong" style="margin-top:6px">${item.id}</div></div>
+    <div class="detailItem"><div class="muted mini">Тип и канал</div><div class="strong" style="margin-top:6px">${item.type} • ${item.channel}</div></div>
+    <div class="detailItem"><div class="muted mini">Финансовый объём</div><div class="strong" style="margin-top:6px">${fmt(item.gross)}</div></div>
+    <div class="detailItem"><div class="muted mini">Комиссия / удержание</div><div class="strong" style="margin-top:6px">${fmt(item.fee)}</div></div>
+    <div class="detailItem"><div class="muted mini">Проблема или риск</div><div class="strong" style="margin-top:6px">${item.issue}</div></div>
+    <div class="detailItem"><div class="muted mini">Потенциальный эффект</div><div class="strong" style="margin-top:6px">${item.effect?fmt(item.effect):'Операция штатная'}</div></div>
+  `
+}
+function renderExceptions(){
+  const items=getCurrentOperations().filter(x=>x.status==='Исключение')
+  document.getElementById('exceptionGrid').innerHTML = items.map(x => `
+    <div class="card">
+      <div class="row between"><h3>${x.id}</h3><span class="pill warn">Требует проверки</span></div>
+      <div class="issueTitle">${x.issue}</div>
+      <div class="issueBox"><div class="issueHead">⚠ Что видно без платформы</div><p class="muted">Риск искажения расчётной информации, задвоения корректировки или ошибки периода признания выручки.</p></div>
+      <div class="issueBox"><div class="issueHead">🔗 Действие платформы</div><p class="muted">Операция направлена в контролируемый центр исключений с причиной, финансовым эффектом и ожидаемым действием пользователя.</p></div>
+      <div class="effectLine"><span class="muted">Потенциальный эффект</span><strong>${fmt(x.effect)}</strong></div>
+      <div class="actions topGap"><button class="btn secondary" onclick="selectOperation('${x.id}'); document.getElementById('registry').scrollIntoView({behavior:'smooth'})">Открыть в реестре</button></div>
+    </div>`).join('')
+}
+function focusExceptions(){document.getElementById('statusFilter').value='Исключение'; quickTag='all'; document.querySelectorAll('.tagChip').forEach(x=>x.classList.toggle('active',x.dataset.tag==='all')); renderRows(); document.getElementById('registry').scrollIntoView({behavior:'smooth'})}
+function renderScenario(){
+  document.getElementById('scenarioGrid').innerHTML = scenarioCatalog.map(item => {
+    const active = scenarioIds.includes(item.scenarioId)
+    return `<div class="comparePanel ${active?'spotlight':''}" style="cursor:pointer" onclick="toggleScenario('${item.scenarioId}')">
+      <strong>${item.label}</strong>
+      <div class="muted small">${item.desc}</div>
+      <div class="actions topGap"><span class="pill ${item.op.status==='Исключение'?'warn':'auto'}">${item.op.status}</span><span class="muted small">${item.op.effect?fmt(item.op.effect):'Без доп. эффекта'}</span></div>
+    </div>`
+  }).join('')
+  const selected = scenarioCatalog.filter(x=>scenarioIds.includes(x.scenarioId))
+  document.getElementById('scenarioState').textContent = `${selected.length} добавлено`
+  document.getElementById('scenarioLead').textContent = selected.length ? 'Новые операции уже встроены в общий поток платформы. Ниже можно открыть реестр и увидеть обновлённые статусы.' : 'Выбери один или несколько кейсов. Новые операции сразу попадут в реестр платформы и изменят dashboard.'
+  document.getElementById('scenarioFeed').innerHTML = selected.length ? selected.map(item => `<div class="detailItem"><div class="muted mini">${item.op.id}</div><div class="strong" style="margin-top:6px">${item.label}</div><div class="muted small" style="margin-top:6px">${item.desc}</div></div>`).join('') : '<div class="detailItem"><div class="muted mini">Поток событий</div><div class="strong" style="margin-top:6px">Пока добавочных операций нет</div></div>'
+}
+function toggleScenario(id){
+  scenarioIds = scenarioIds.includes(id) ? scenarioIds.filter(x=>x!==id) : [...scenarioIds, id]
+  const added = scenarioCatalog.find(x=>x.scenarioId===id)
+  if(added && scenarioIds.includes(id)) selectedId = added.op.id
+  renderAll()
+}
+function resetScenario(){scenarioIds=[]; selectedId='ORD-009'; renderAll()}
+function renderMetrics(){
+  const m = getMetrics()
+  document.getElementById('metricSources').textContent = m.sources
+  document.getElementById('metricAutoTop').textContent = m.autoClosed
+  document.getElementById('metricExceptionsTop').textContent = m.exceptions
+  document.getElementById('metricWeeklyTop').textContent = fmt(m.weekly)
+  document.getElementById('metricTotal').textContent = m.total
+  document.getElementById('metricAutoMain').textContent = m.autoClosed
+  document.getElementById('metricExceptionsMain').textContent = m.exceptions
+  document.getElementById('metricWeeklyMain').textContent = fmt(m.weekly)
+  document.getElementById('metricMonthlyMain').textContent = fmt(m.monthly)
+  document.getElementById('finalWeeklyEffect').textContent = fmt(m.weekly)
+  document.getElementById('finalMonthlyEffect').textContent = fmt(m.monthly)
+  document.getElementById('finalAutoClosed').textContent = `${m.autoClosed} / ${m.total} операций`
+  renderStatusBars(m)
+  renderEffectBars(m.ops)
+}
+function renderStatusBars(m){
+  const total = Math.max(m.total,1)
+  const items = [
+    ['Сопоставлено', m.matched],
+    ['Автоматически закрыто', m.autoResolved],
+    ['Исключения', m.exceptions],
+  ]
+  document.getElementById('statusBars').innerHTML = items.map((it,i)=>`<div class="barBox ${i? 'topGap':''}"><div class="barLabel"><span>${it[0]}</span><span>${it[1]}</span></div><div class="barTrack"><div class="barFill" style="width:${Math.round((it[1]/total)*100)}%"></div></div></div>`).join('')
+}
+function renderEffectBars(ops){
+  const buckets = ['Комиссии и удержания','Возвраты и корректировки','Лицензионная выручка','Ручная сверка']
+  const sums = Object.fromEntries(buckets.map(x=>[x,0]))
+  ops.forEach(x=>sums[x.effectBucket] = (sums[x.effectBucket]||0) + (x.effect||0))
+  const total = Object.values(sums).reduce((a,b)=>a+b,0) || 1
+  document.getElementById('effectBars').innerHTML = buckets.map((b,i)=>`<div class="barBox ${i? 'topGap':''}"><div class="barLabel"><span>${b}</span><span>${fmt(sums[b])}</span></div><div class="barTrack"><div class="barFill" style="width:${Math.round((sums[b]/total)*100)}%"></div></div></div>`).join('')
+}
+function clearSpots(){['sources','architecture','simulator','registry','analytics'].forEach(id=>document.getElementById(id).classList.remove('spotlight'))}
+function renderTour(){
+  document.getElementById('overlayTitle').textContent=tour[step].title
+  document.getElementById('overlayText').textContent=tour[step].text
+  document.getElementById('progress').innerHTML=tour.map((_,i)=>`<div class="dot ${i<=step?'active':''}"></div>`).join('')
+  document.getElementById('prevBtn').disabled=step===0
+  clearSpots();document.getElementById(tour[step].target).classList.add('spotlight');document.getElementById(tour[step].target).scrollIntoView({behavior:'smooth',block:'center'})
+}
+function schedule(){clearTimeout(timer); if(step<tour.length-1){timer=setTimeout(()=>{step++;renderTour();schedule()},3200)} else {timer=setTimeout(()=>{document.getElementById('overlayTitle').textContent='Демонстрация завершена';document.getElementById('overlayText').textContent='Теперь можно вернуться к dashboard и озвучить итог: сколько операций обработано автоматически, сколько ушло в исключения и какой эффект получен за неделю.';document.getElementById('nextBtn').textContent='Вернуться к дашборду'},2800)}}
+function startTour(){step=0;document.getElementById('overlay').classList.add('show');document.getElementById('nextBtn').textContent='Следующий этап';renderTour();schedule()}
+function stopTour(){clearTimeout(timer);document.getElementById('overlay').classList.remove('show');clearSpots();step=0}
+function nextStep(){if(document.getElementById('nextBtn').textContent.includes('Вернуться')){stopTour();return}clearTimeout(timer);if(step<tour.length-1){step++;renderTour();schedule()}}
+function prevStep(){clearTimeout(timer);if(step>0){step--;renderTour();schedule()}}
+function renderAll(){renderSources();renderDays();renderScenario();renderRows();renderExceptions();renderMetrics()}
+renderMode();renderAll();
+document.getElementById('searchInput').addEventListener('input',renderRows)
+document.getElementById('statusFilter').addEventListener('change',renderRows)
+document.getElementById('typeFilter').addEventListener('change',renderRows)
+</script>
+</body>
+</html>
