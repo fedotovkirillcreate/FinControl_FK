@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReconFlow Commerce MVP</title>
+  <style>
+    :root{color-scheme:dark;--bg:#07101f;--panel:#0d1527e8;--line:#26304d;--text:#f8fafc;--muted:#94a3b8;--blue:#2563eb;--green:#22c55e;--amber:#f59e0b;font-family:Inter,system-ui,sans-serif}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,#07101f,#0a1425);color:var(--text)}button,input,select{font:inherit}
+    .app{max-width:1400px;margin:0 auto;padding:24px}.card{background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:0 24px 80px rgba(0,0,0,.18)}
+    .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.heroMain{background:linear-gradient(180deg,#0f162a,#0b1020);border:1px solid var(--line);border-radius:28px;padding:28px}.badge{display:inline-flex;padding:8px 12px;border-radius:999px;background:#2563eb22;color:#bfdbfe;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+    h1{font-size:clamp(40px,6vw,66px);line-height:1;margin:16px 0 12px}h2{margin:0;font-size:30px}h3{margin:0 0 10px}.muted{color:var(--muted);line-height:1.7}.actions,.row{display:flex;gap:12px;align-items:center}.between{justify-content:space-between}.right{justify-content:flex-end}.topGap{margin-top:28px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 16px;border-radius:16px;border:1px solid transparent;cursor:pointer;color:#fff;text-decoration:none}.primary{background:linear-gradient(180deg,#2563eb,#1d4ed8)}.secondary{background:#0f172acc;border-color:var(--line)}.ghost{background:#22c55e12;color:#dcfce7;border-color:#22c55e3d}
+    .grid3,.grid4,.grid2,.grid5{display:grid;gap:16px}.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid4{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:18px}.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid5{grid-template-columns:repeat(5,minmax(0,1fr))}.heroMain .grid3{margin-top:18px}
+    .big{font-size:34px;font-weight:700;margin-top:8px}.medium{font-size:28px;font-weight:700;margin-top:8px}.small{font-size:14px}
+    .stack{display:grid;gap:12px;margin-top:16px}.stepBox{display:grid;grid-template-columns:34px 1fr;gap:10px;padding:12px;border-radius:18px;background:#0a1020;border:1px solid var(--line)}.stepBox span{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:999px;background:#2563eb22;color:#bfdbfe;font-weight:700}
+    .toggle{display:inline-grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:6px;border-radius:16px;background:var(--panel);border:1px solid var(--line)}.toggle button{min-height:40px;padding:0 16px;border:0;background:transparent;color:var(--muted);border-radius:12px;cursor:pointer}.toggle .active{background:#2563eb22;color:#fff}
+    .sourceName{font-size:18px;font-weight:600}.bullet,.flow,.issueBox,.effectLine,.search,.barBox{background:#0a1020;border:1px solid var(--line);border-radius:16px}.bullet,.flow,.issueBox,.barBox{padding:14px}.search{display:flex;align-items:center;gap:8px;padding:0 12px;height:46px}.search input{border:0;outline:0;background:transparent;color:#fff;min-width:220px;width:100%}.filters{display:flex;gap:12px;flex-wrap:wrap}.filters select{height:46px;border-radius:16px;border:1px solid var(--line);background:var(--panel);color:#fff;padding:0 12px}
+    .tableWrap{overflow:auto}.tableWrap table{width:100%;min-width:960px;border-collapse:collapse}.tableWrap th,.tableWrap td{padding:14px 16px;text-align:left;border-top:1px solid var(--line)}.tableWrap th{border-top:0;background:#08101c;color:var(--muted);position:sticky;top:0}.strong{font-weight:700;color:#fff}
+    .pill{display:inline-flex;min-height:28px;align-items:center;justify-content:center;padding:0 12px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid transparent}.ok{background:#22c55e1a;color:#bbf7d0;border-color:#22c55e33}.auto{background:#2563eb1f;color:#bfdbfe;border-color:#2563eb3d}.warn{background:#f59e0b1f;color:#fde68a;border-color:#f59e0b3d}
+    .issueTitle{margin-top:6px;color:#dbe4f1}.issueBox p{margin:8px 0 0}.issueHead{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600}.effectLine{display:flex;align-items:center;justify-content:space-between;padding:14px;margin-top:12px}.barLabel{display:flex;justify-content:space-between;gap:10px;margin-bottom:8px}.barTrack{height:12px;border-radius:999px;background:#13203a;overflow:hidden}.barFill{height:100%;border-radius:999px;background:linear-gradient(90deg,#2563eb,#22c55e)}
+    .qrCard{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:center}.qrBox{min-height:220px;border:1px dashed #51617f;border-radius:24px;display:flex;align-items:center;justify-content:center;text-align:center;color:#7d8db0;background:#0a1020}
+    .overlay{position:fixed;inset:0;background:rgba(2,6,14,.68);backdrop-filter:blur(6px);display:none;align-items:flex-end;justify-content:center;padding:18px;z-index:50}.overlay.show{display:flex}.overlayCard{width:min(820px,100%);background:#08101cf5;border:1px solid #344161;border-radius:24px;padding:22px}.iconBtn{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:transparent;color:#fff;cursor:pointer}.progress{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:14px}.dot{height:6px;border-radius:999px;background:#94a3b833}.dot.active{background:linear-gradient(90deg,#2563eb,#22c55e)}.spotlight{box-shadow:0 0 0 1px rgba(37,99,235,.55),0 0 0 8px rgba(37,99,235,.08),0 24px 80px rgba(0,0,0,.18)}
+    @media(max-width:1100px){.hero,.grid2,.qrCard{grid-template-columns:1fr}.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}.grid5{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:760px){.app{padding:16px}.heroMain,.card{padding:18px}.grid3,.grid4,.grid2,.grid5{grid-template-columns:1fr}.actions,.row,.filters{flex-direction:column;align-items:stretch}.between{align-items:flex-start}.search input{min-width:0}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <section class="hero">
+    <div class="heroMain">
+      <div class="badge">Стартап-диплом • Публикуемый MVP</div>
+      <h1>ReconFlow Commerce</h1>
+      <p class="muted">Платформа автоматизированного учёта и контроля расчётных операций для e-commerce-компании, которая продаёт товары онлайн, работает через посредников по доставке и реализует цифровые лицензии.</p>
+      <div class="actions topGap">
+        <button class="btn primary" onclick="document.getElementById('analytics').scrollIntoView({behavior:'smooth'})">Перейти к дашборду</button>
+        <button class="btn secondary" onclick="startTour()">▶ Как платформа обрабатывает данные</button>
+        <button class="btn ghost" onclick="document.getElementById('defense').scrollIntoView({behavior:'smooth'})">▣ Сценарий защиты</button>
+      </div>
+      <div class="grid3 topGap">
+        <div class="card"><div class="muted small">Операций за неделю</div><div class="big">20</div></div>
+        <div class="card"><div class="muted small">Проблемных кейсов</div><div class="big">8</div></div>
+        <div class="card"><div class="muted small">Эффект в месяц</div><div class="big">44 400 ₽</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Сценарий демонстрации</h3>
+      <p class="muted">Одна неделя работы компании: товары + лицензии.</p>
+      <div class="stack">
+        <div class="stepBox"><span>1</span><div>До платформы: 6 источников и ручная сверка.</div></div>
+        <div class="stepBox"><span>2</span><div>После платформы: единый профиль операции.</div></div>
+        <div class="stepBox"><span>3</span><div>16 операций закрыто автоматически, 4 направлены в исключения.</div></div>
+        <div class="stepBox"><span>4</span><div>Предотвращённый эффект: 11 100 ₽ за неделю.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="row between topGap">
+    <div>
+      <h2>Режим демонстрации</h2>
+      <p class="muted">Покажи контраст между состоянием компании до платформы и после её запуска.</p>
+    </div>
+    <div class="toggle">
+      <button id="beforeBtn" onclick="setMode('before')">До платформы</button>
+      <button id="afterBtn" class="active" onclick="setMode('after')">После платформы</button>
+    </div>
+  </section>
+
+  <section class="grid4">
+    <div class="card"><div class="muted small">Источников данных</div><div class="medium">6</div></div>
+    <div class="card"><div class="muted small">Автоматически закрыто</div><div class="medium">16 / 20</div></div>
+    <div class="card"><div class="muted small">Исключения</div><div class="medium">4</div></div>
+    <div class="card"><div class="muted small">Эффект за неделю</div><div class="medium">11 100 ₽</div></div>
+  </section>
+
+  <section id="sources" class="grid3 topGap">
+    <div class="card sourceName">Интернет-магазин / OMS</div>
+    <div class="card sourceName">Маркетплейс</div>
+    <div class="card sourceName">Платёжный шлюз</div>
+    <div class="card sourceName">Логистический посредник</div>
+    <div class="card sourceName">Биллинг лицензий</div>
+    <div class="card sourceName">Банковская выписка</div>
+  </section>
+
+  <section class="grid2 topGap">
+    <div class="card">
+      <h3 id="modeTitle">Состояние после платформы</h3>
+      <div class="stack" id="modeList"></div>
+    </div>
+    <div class="card" id="architecture">
+      <h3>Архитектура платформы</h3>
+      <div class="stack">
+        <div class="flow">1. Источники данных</div>
+        <div class="flow">2. Нормализация</div>
+        <div class="flow">3. Сопоставление</div>
+        <div class="flow">4. Правила интерпретации</div>
+        <div class="flow">5. Центр исключений</div>
+        <div class="flow">6. Аналитика</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="registry" class="topGap">
+    <div class="row between">
+      <div>
+        <h2>Единый реестр операций</h2>
+        <p class="muted">20 операций за неделю: товары и лицензии.</p>
+      </div>
+      <div class="filters">
+        <div class="search"><span>⌕</span><input id="searchInput" placeholder="Поиск по ID, каналу или проблеме" /></div>
+        <select id="statusFilter">
+          <option value="all">Все статусы</option>
+          <option value="Сопоставлено">Сопоставлено</option>
+          <option value="Автокоррекция">Автокоррекция</option>
+          <option value="Автосвязка">Автосвязка</option>
+          <option value="Исключение">Исключение</option>
+        </select>
+      </div>
+    </div>
+    <div class="card" id="tableWrapCard">
+      <div class="tableWrap"><table>
+        <thead><tr><th>ID</th><th>Тип</th><th>Канал</th><th>Сумма</th><th>Комиссия</th><th>Статус</th><th>Проблема</th><th>Эффект</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <section id="exceptions" class="topGap">
+    <h2>Центр исключений</h2>
+    <p class="muted">Нестандартные операции переводятся в отдельный контур контроля.</p>
+    <div class="grid2" id="exceptionGrid"></div>
+  </section>
+
+  <section id="analytics" class="topGap">
+    <h2>Аналитика эффекта</h2>
+    <p class="muted">Итоговый результат, который видит комиссия на dashboard.</p>
+    <div class="grid5 topGap">
+      <div class="card"><div class="muted small">Операций за неделю</div><div class="big">20</div></div>
+      <div class="card"><div class="muted small">Автоматически закрыто</div><div class="big">16</div></div>
+      <div class="card"><div class="muted small">Исключений</div><div class="big">4</div></div>
+      <div class="card"><div class="muted small">Эффект за неделю</div><div class="big">11 100 ₽</div></div>
+      <div class="card"><div class="muted small">Потенциал в месяц</div><div class="big">44 400 ₽</div></div>
+    </div>
+    <div class="grid2 topGap">
+      <div class="card">
+        <h3>Статусы обработки</h3>
+        <div class="barBox"><div class="barLabel"><span>Сопоставлено</span><span>12</span></div><div class="barTrack"><div class="barFill" style="width:60%"></div></div></div>
+        <div class="barBox topGap"><div class="barLabel"><span>Автоматически закрыто</span><span>4</span></div><div class="barTrack"><div class="barFill" style="width:20%"></div></div></div>
+        <div class="barBox topGap"><div class="barLabel"><span>Исключения</span><span>4</span></div><div class="barTrack"><div class="barFill" style="width:20%"></div></div></div>
+      </div>
+      <div class="card">
+        <h3>Из чего состоит экономия</h3>
+        <div class="barBox"><div class="barLabel"><span>Комиссии и удержания</span><span>3 200 ₽</span></div><div class="barTrack"><div class="barFill" style="width:29%"></div></div></div>
+        <div class="barBox topGap"><div class="barLabel"><span>Возвраты и корректировки</span><span>2 100 ₽</span></div><div class="barTrack"><div class="barFill" style="width:19%"></div></div></div>
+        <div class="barBox topGap"><div class="barLabel"><span>Лицензионная выручка</span><span>3 000 ₽</span></div><div class="barTrack"><div class="barFill" style="width:27%"></div></div></div>
+        <div class="barBox topGap"><div class="barLabel"><span>Ручная сверка</span><span>2 800 ₽</span></div><div class="barTrack"><div class="barFill" style="width:25%"></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="defense" class="topGap">
+    <div class="card qrCard">
+      <div>
+        <div class="badge">Финальный акцент защиты</div>
+        <h3>MVP опубликован и готов к демонстрации</h3>
+        <p class="muted">На защите QR-код лучше размещать в презентации, а на самом сайте оставить чистый финальный экран с ключевым результатом продукта.</p>
+        <div class="stack topGap">
+          <div class="bullet"><strong class="strong">Что видит комиссия:</strong><br/>готовый дашборд, путь обработки данных и центр исключений.</div>
+          <div class="bullet"><strong class="strong">Что говоришь ты:</strong><br/>за неделю система автоматически закрыла 16 из 20 операций и помогла предотвратить потери и издержки на 11 100 ₽.</div>
+        </div>
+        <div class="actions topGap">
+          <button class="btn primary" onclick="startTour()">Повторить walkthrough</button>
+          <button class="btn secondary" onclick="document.getElementById('analytics').scrollIntoView({behavior:'smooth'})">К аналитике</button>
+        </div>
+      </div>
+      <div class="card" style="min-height:220px;display:flex;flex-direction:column;justify-content:center;gap:12px;background:#0a1020">
+        <div class="muted small">Ключевой вывод</div>
+        <div class="big" style="margin-top:0">11 100 ₽</div>
+        <div class="muted">предотвращённый эффект за неделю</div>
+        <div class="effectLine" style="margin-top:8px"><span class="muted">Потенциал в месяц</span><span class="strong">44 400 ₽</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div id="overlay" class="overlay">
+  <div class="overlayCard">
+    <div class="row between"><div><div class="badge">Guided motion walkthrough</div><h3 id="overlayTitle">Сбор данных</h3></div><button class="iconBtn" onclick="stopTour()">✕</button></div>
+    <p class="muted" id="overlayText"></p>
+    <div class="progress" id="progress"></div>
+    <div class="row right topGap">
+      <button class="btn secondary" id="prevBtn" onclick="prevStep()">Назад</button>
+      <button class="btn primary" id="nextBtn" onclick="nextStep()">Следующий этап</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const operations = [
+  ['ORD-001','Товар','Сайт',12400,620,'Сопоставлено','—',0],['ORD-002','Товар','Маркетплейс',8900,712,'Сопоставлено','—',0],['ORD-003','Товар','Сайт',15600,780,'Сопоставлено','—',0],['ORD-004','Товар','Маркетплейс',6800,544,'Сопоставлено','—',0],['ORD-005','Товар','Сайт',21300,1065,'Сопоставлено','—',0],['ORD-006','Товар','Сайт',10200,510,'Сопоставлено','—',0],['ORD-007','Товар','Маркетплейс',4900,392,'Сопоставлено','—',0],['ORD-008','Товар','Сайт',18700,935,'Сопоставлено','—',0],['ORD-009','Товар','Маркетплейс',13500,1080,'Автокоррекция','Скрытое удержание логистики',850],['ORD-010','Товар','Сайт',9800,490,'Автосвязка','Неидентифицированный возврат',1300],['ORD-011','Товар','Маркетплейс',11400,912,'Исключение','Частичный возврат',650],['ORD-012','Товар','Сайт',5600,280,'Автосвязка','Банк без reference',450],['ORD-013','Товар','Маркетплейс',16200,1296,'Исключение','Подозрение на двойную комиссию',1100],['ORD-014','Товар','Сайт',14900,745,'Сопоставлено','—',0],['LIC-001','Лицензия','Биллинг',3900,195,'Сопоставлено','—',0],['LIC-002','Лицензия','Биллинг',36000,0,'Исключение','Годовая лицензия',3000],['LIC-003','Лицензия','Биллинг',5400,270,'Сопоставлено','—',0],['LIC-004','Лицензия','Биллинг',24000,0,'Сопоставлено','—',0],['LIC-005','Лицензия','Партнёрский канал',18000,1250,'Автокоррекция','Комиссия партнёра',1250],['LIC-006','Лицензия','Биллинг',12000,0,'Исключение','Платёж без связки с договором',2500]
+].map(([id,type,channel,gross,fee,status,issue,effect]) => ({id,type,channel,gross,fee,status,issue,effect}))
+const modeMap = {
+  before: ['20 операций распределены между 6 источниками.','Часть выплат выглядит штатно, но содержит скрытые удержания.','Лицензионная выручка требует отдельной ручной интерпретации.','Закрытие недели зависит от ручной сверки.'],
+  after: ['16 операций закрываются автоматически.','4 нестандартные операции передаются в центр исключений.','Возвраты, удержания и партнёрские комиссии становятся прозрачными.','Компания получает единый расчётно-учётный результат.']
+}
+const tour = [
+  {title:'Сбор данных',text:'Платформа собирает события из 6 разрозненных источников.',target:'sources'},
+  {title:'Нормализация',text:'Все события приводятся к единому профилю операции.',target:'architecture'},
+  {title:'Сопоставление',text:'Система связывает заказ, платёж, возврат и выплату.',target:'registry'},
+  {title:'Исключения',text:'Нестандартные кейсы переводятся в отдельный центр контроля.',target:'exceptions'},
+  {title:'Результат',text:'На выходе — единый реестр операций и экономический эффект.',target:'analytics'}
+]
+let mode = 'after'
+let step = 0
+let timer = null
+function fmt(n){return new Intl.NumberFormat('ru-RU',{style:'currency',currency:'RUB',maximumFractionDigits:0}).format(n)}
+function statusClass(s){return s==='Сопоставлено'?'ok':(s==='Исключение'?'warn':'auto')}
+function renderMode(){
+  document.getElementById('modeTitle').textContent = mode==='before'?'Состояние до платформы':'Состояние после платформы'
+  document.getElementById('beforeBtn').classList.toggle('active',mode==='before')
+  document.getElementById('afterBtn').classList.toggle('active',mode==='after')
+  document.getElementById('modeList').innerHTML = modeMap[mode].map(x => `<div class="bullet">${x}</div>`).join('')
+}
+function setMode(next){mode=next;renderMode()}
+function renderRows(){
+  const q=(document.getElementById('searchInput').value||'').toLowerCase().trim()
+  const filter=document.getElementById('statusFilter').value
+  const rows=operations.filter(x => (filter==='all'||x.status===filter) && (!q || [x.id,x.type,x.channel,x.issue,x.status].join(' ').toLowerCase().includes(q)))
+  document.getElementById('rows').innerHTML = rows.map(x => `<tr><td class="strong">${x.id}</td><td>${x.type}</td><td>${x.channel}</td><td>${fmt(x.gross)}</td><td>${fmt(x.fee)}</td><td><span class="pill ${statusClass(x.status)}">${x.status}</span></td><td class="muted">${x.issue}</td><td>${x.effect?fmt(x.effect):'—'}</td></tr>`).join('')
+}
+function renderExceptions(){
+  const items=operations.filter(x=>x.status==='Исключение')
+  document.getElementById('exceptionGrid').innerHTML = items.map(x => `<div class="card"><div class="row between"><h3>${x.id}</h3><span class="pill warn">Требует проверки</span></div><div class="issueTitle">${x.issue}</div><div class="issueBox"><div class="issueHead">⚠ Что видно без платформы</div><p class="muted">Риск искажения расчётной информации и ручная перепроверка операции.</p></div><div class="issueBox"><div class="issueHead">🔗 Действие платформы</div><p class="muted">Операция направлена в контролируемый центр исключений с причиной и ожидаемым действием.</p></div><div class="effectLine"><span class="muted">Потенциальный эффект</span><strong>${fmt(x.effect)}</strong></div></div>`).join('')
+}
+function clearSpots(){['sources','architecture','registry','exceptions','analytics'].forEach(id=>document.getElementById(id).classList.remove('spotlight'))}
+function renderTour(){
+  document.getElementById('overlayTitle').textContent=tour[step].title
+  document.getElementById('overlayText').textContent=tour[step].text
+  document.getElementById('progress').innerHTML=tour.map((_,i)=>`<div class="dot ${i<=step?'active':''}"></div>`).join('')
+  document.getElementById('prevBtn').disabled=step===0
+  clearSpots();document.getElementById(tour[step].target).classList.add('spotlight');document.getElementById(tour[step].target).scrollIntoView({behavior:'smooth',block:'center'})
+}
+function schedule(){clearTimeout(timer);if(step<tour.length-1){timer=setTimeout(()=>{step++;renderTour();schedule()},3200)}else{timer=setTimeout(()=>{document.getElementById('overlayTitle').textContent='Демонстрация завершена';document.getElementById('overlayText').textContent='Теперь можно вернуться к dashboard и показать итоговый результат.';document.getElementById('nextBtn').textContent='Вернуться к дашборду'},2800)}}
+function startTour(){step=0;document.getElementById('overlay').classList.add('show');document.getElementById('nextBtn').textContent='Следующий этап';renderTour();schedule()}
+function stopTour(){clearTimeout(timer);document.getElementById('overlay').classList.remove('show');clearSpots();step=0}
+function nextStep(){if(document.getElementById('nextBtn').textContent.includes('Вернуться')){stopTour();return}clearTimeout(timer);if(step<tour.length-1){step++;renderTour();schedule()}}
+function prevStep(){clearTimeout(timer);if(step>0){step--;renderTour();schedule()}}
+renderMode();renderRows();renderExceptions();
+document.getElementById('searchInput').addEventListener('input',renderRows)
+document.getElementById('statusFilter').addEventListener('change',renderRows)
+</script>
+</body>
+</html>
