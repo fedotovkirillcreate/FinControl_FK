@@ -3,252 +3,900 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ReconFlow Commerce — v5 Demo</title>
+  <title>FinControl VKR — MVP платформы контроля расчетных операций</title>
   <style>
-    :root{--bg:#08111f;--bg2:#0d1728;--panel:#0f1b31;--panel2:#111f39;--soft:#172746;--line:#23365c;--text:#edf4ff;--muted:#8ea4c8;--green:#22c55e;--blue:#4ea1ff;--amber:#f59e0b;--red:#ef4444;--cyan:#06b6d4;--shadow:0 20px 50px rgba(0,0,0,.28);--radius:22px;--radiusLg:30px}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at 10% 0%,rgba(78,161,255,.18),transparent 28%),radial-gradient(circle at 90% 0%,rgba(34,197,94,.10),transparent 22%),linear-gradient(180deg,var(--bg),#050b15 100%);color:var(--text)}
-    a{color:inherit;text-decoration:none}.container{width:min(1220px,calc(100% - 32px));margin:0 auto}.topnav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(5,11,21,.75);border-bottom:1px solid rgba(255,255,255,.06)}.navinner{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0}
-    .brand{display:flex;align-items:center;gap:12px;font-weight:700}.brand .dot{width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--cyan));box-shadow:0 0 24px rgba(78,161,255,.6)}
-    .navlinks{display:flex;gap:8px;flex-wrap:wrap}.navlinks button,.ghostbtn,.modebtn,.miniBtn,.caseBtn,.tag,.tourBtn{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:var(--text);border-radius:14px;padding:10px 14px;cursor:pointer;transition:.2s ease;font-weight:600}
-    .navlinks button:hover,.ghostbtn:hover,.modebtn:hover,.miniBtn:hover,.caseBtn:hover,.tag:hover,.tourBtn:hover{transform:translateY(-1px);background:rgba(255,255,255,.06)}
-    .hero{padding:42px 0 20px}.badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid rgba(78,161,255,.22);background:rgba(78,161,255,.08);color:#cfe4ff;font-size:13px;font-weight:700}
-    h1{margin:18px 0 12px;font-size:clamp(34px,5vw,64px);line-height:1.02;letter-spacing:-.04em}.sub{font-size:18px;line-height:1.7;color:#c7d7f2;max-width:860px}
-    .heroGrid{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:stretch;margin-top:26px}.card{background:linear-gradient(180deg,rgba(17,31,57,.95),rgba(11,20,37,.95));border:1px solid rgba(255,255,255,.07);border-radius:var(--radiusLg);box-shadow:var(--shadow)}.cardPad{padding:24px}
-    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}.primary{background:linear-gradient(135deg,var(--blue),#3477ff);border-color:transparent}.primary:hover{filter:brightness(1.05)}.secondary{background:rgba(255,255,255,.03)}
-    .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}.metric{padding:18px;border-radius:20px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}.metric .label{font-size:13px;color:var(--muted);margin-bottom:8px}.metric .value{font-size:30px;font-weight:800;letter-spacing:-.03em}.metric .delta{font-size:13px;color:#cde3ff;margin-top:6px}
-    .scenarioList{display:grid;gap:12px}.scenarioItem{display:grid;grid-template-columns:34px 1fr;gap:12px;padding:14px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}.num{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:rgba(78,161,255,.12);color:#b9d7ff;font-weight:800}
-    .section{padding:14px 0 8px}.sectionTitle{font-size:30px;font-weight:800;letter-spacing:-.03em;margin:20px 0 8px}.sectionSub{color:var(--muted);line-height:1.7}
-    .modeGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}.modeCard{padding:18px;border-radius:20px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);cursor:pointer;transition:.2s ease}.modeCard.active{outline:2px solid rgba(78,161,255,.45);background:rgba(78,161,255,.09)}.modeCard:hover{transform:translateY(-2px)}.modeCard .title{font-weight:800;margin-bottom:8px}
-    .sourceGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:16px}.source{padding:16px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:.2s}.source.active{background:rgba(78,161,255,.10);border-color:rgba(78,161,255,.35)}.source:hover{transform:translateY(-2px)}.source .count{font-size:26px;font-weight:800;margin-top:8px}.source .hint{font-size:12px;color:var(--muted);margin-top:6px}
-    .simGrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:16px}.panelHeader{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.panelHeader h3{margin:0;font-size:20px}
-    .caseGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.caseBtn{display:block;text-align:left;padding:14px 15px;border-radius:18px}.caseBtn small{display:block;color:var(--muted);font-weight:500;margin-top:6px;line-height:1.5}.caseBtn.good{border-color:rgba(34,197,94,.22);background:rgba(34,197,94,.06)}.caseBtn.bad{border-color:rgba(245,158,11,.25);background:rgba(245,158,11,.08)}
-    .miniRow{display:flex;gap:10px;flex-wrap:wrap}.timeline{display:grid;gap:12px}.tlItem{display:grid;grid-template-columns:16px 1fr;gap:12px}.tlDot{width:16px;height:16px;border-radius:50%;margin-top:6px;background:linear-gradient(135deg,var(--blue),var(--cyan));box-shadow:0 0 20px rgba(78,161,255,.5)}.tlText{padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
-    .toolbar{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;margin:18px 0}.tagRow{display:flex;gap:10px;flex-wrap:wrap}.tag.active{background:rgba(78,161,255,.15);border-color:rgba(78,161,255,.4)}.filters{display:flex;gap:10px;flex-wrap:wrap}
-    select,input{background:rgba(255,255,255,.03);color:var(--text);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:11px 13px;outline:none}
-    table{width:100%;border-collapse:collapse}th,td{padding:14px 12px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left;vertical-align:top}th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}tbody tr{cursor:pointer;transition:.16s}tbody tr:hover{background:rgba(255,255,255,.03)}
-    .status{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:800;border:1px solid transparent}.s-ok{background:rgba(34,197,94,.1);color:#bbf7d0;border-color:rgba(34,197,94,.2)}.s-auto{background:rgba(78,161,255,.12);color:#d8ebff;border-color:rgba(78,161,255,.2)}.s-ex{background:rgba(245,158,11,.12);color:#ffe3b0;border-color:rgba(245,158,11,.24)}
-    .layoutTwo{display:grid;grid-template-columns:1.45fr .75fr;gap:18px}.drawer{position:sticky;top:84px;height:max-content}.detailList{display:grid;gap:10px}.kv{display:flex;justify-content:space-between;gap:14px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05)}.kv .k{color:var(--muted)}
-    .chain{display:flex;gap:8px;flex-wrap:wrap}.chip{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);font-size:13px}
-    .exceptionGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:16px}.exCard{padding:18px;border-radius:22px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.18);cursor:pointer;transition:.2s}.exCard:hover{transform:translateY(-2px)}.risk{display:inline-flex;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:800}.r-high{background:rgba(239,68,68,.12);color:#fecaca}.r-mid{background:rgba(245,158,11,.12);color:#ffe3b0}
-    .analyticsGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:16px}.chartCard{padding:18px}.barWrap{display:grid;gap:12px;margin-top:8px}.barRow{display:grid;grid-template-columns:180px 1fr 56px;gap:12px;align-items:center}.barTrack{height:14px;border-radius:999px;background:rgba(255,255,255,.05);overflow:hidden;border:1px solid rgba(255,255,255,.05)}.bar{height:100%;border-radius:999px}.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:14px}.legend span{display:inline-flex;align-items:center;gap:8px}.legend .dot{width:10px;height:10px;border-radius:50%}
-    .summary{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.bigNumber{font-size:54px;font-weight:900;letter-spacing:-.05em}.footer{padding:36px 0 60px;color:var(--muted)}.muted{color:var(--muted)}.small{font-size:13px}.hidden{display:none !important}
-    .presentation .sourceGrid{grid-template-columns:repeat(3,1fr)}.presentation .simGrid{grid-template-columns:1fr}.presentation .toolbar .filters,.presentation #simulator{display:none}.presentation .metrics{grid-template-columns:repeat(4,1fr)}.presentation .metric .value{font-size:38px}.presentation .sectionSub{max-width:760px}.presentation .heroGrid{grid-template-columns:1fr}.presentation .layoutTwo{grid-template-columns:1fr}.presentation .drawer{position:relative;top:auto}
-    .floatingPulse{position:fixed;right:18px;bottom:18px;z-index:30;border-radius:999px;padding:13px 16px;background:linear-gradient(135deg,var(--blue),#2b6fff);color:white;font-weight:800;border:none;cursor:pointer;box-shadow:0 20px 30px rgba(32,89,255,.35)}
-    .tourOverlay{position:fixed;inset:0;z-index:100;background:rgba(3,9,18,.72);backdrop-filter:blur(6px);display:none}.tourOverlay.show{display:block}.tourBox{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);width:min(760px,calc(100% - 24px));background:linear-gradient(180deg,#101d34,#0b1528);border:1px solid rgba(255,255,255,.08);border-radius:24px;box-shadow:var(--shadow);padding:20px;z-index:102}.tourTop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.tourTitle{font-size:24px;font-weight:900;margin:0 0 8px}.tourDesc{color:#d7e6ff;line-height:1.7}.tourActions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.tourStage{position:absolute;border-radius:28px;z-index:101;box-shadow:0 0 0 9999px rgba(3,9,18,.30),0 0 0 2px rgba(78,161,255,.7),0 0 24px rgba(78,161,255,.35);transition:.35s ease;pointer-events:none}
-    .flash{animation:flash .85s ease}@keyframes flash{0%{box-shadow:0 0 0 rgba(78,161,255,.0)}20%{box-shadow:0 0 0 8px rgba(78,161,255,.18)}100%{box-shadow:0 0 0 rgba(78,161,255,.0)}}
-    @media (max-width:1100px){.heroGrid,.summary,.layoutTwo,.analyticsGrid,.simGrid,.modeGrid{grid-template-columns:1fr}.sourceGrid{grid-template-columns:repeat(3,1fr)}.metrics{grid-template-columns:repeat(2,1fr)}.exceptionGrid{grid-template-columns:1fr}}
-    @media (max-width:700px){.sourceGrid,.caseGrid{grid-template-columns:1fr 1fr}.metrics{grid-template-columns:1fr 1fr}.navinner{align-items:flex-start;flex-direction:column}.navlinks{width:100%}.barRow{grid-template-columns:120px 1fr 46px}.sourceGrid{grid-template-columns:1fr 1fr}.bigNumber{font-size:42px}}
-    @media (max-width:540px){.metrics,.sourceGrid,.caseGrid{grid-template-columns:1fr}.barRow{grid-template-columns:1fr}}
+    :root {
+      --bg: #0f172a;
+      --bg2: #111827;
+      --card: rgba(255,255,255,0.08);
+      --card2: rgba(255,255,255,0.12);
+      --line: rgba(255,255,255,0.14);
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --blue: #60a5fa;
+      --green: #34d399;
+      --red: #fb7185;
+      --yellow: #fbbf24;
+      --purple: #a78bfa;
+      --shadow: 0 18px 55px rgba(0,0,0,0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(96,165,250,0.22), transparent 30%),
+        radial-gradient(circle at top right, rgba(167,139,250,0.18), transparent 32%),
+        linear-gradient(135deg, #0f172a 0%, #111827 45%, #020617 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 32px 6vw 20px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(2,6,23,0.45);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .badge {
+      display: inline-flex;
+      width: fit-content;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 13px;
+      background: rgba(255,255,255,0.06);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 54px);
+      line-height: 1.05;
+      letter-spacing: -1px;
+    }
+
+    .subtitle {
+      max-width: 940px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.55;
+      margin: 18px 0 0;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    button, select, input {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    button {
+      cursor: pointer;
+      transition: 0.2s ease;
+      font-weight: 700;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.14);
+    }
+
+    .primary {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      border: none;
+    }
+
+    .green {
+      background: linear-gradient(135deg, #059669, #10b981);
+      border: none;
+    }
+
+    main {
+      padding: 28px 6vw 60px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      border-radius: 26px;
+      padding: 22px;
+      backdrop-filter: blur(12px);
+    }
+
+    .wide { grid-column: span 12; }
+    .half { grid-column: span 6; }
+    .third { grid-column: span 4; }
+    .two-thirds { grid-column: span 8; }
+
+    @media (max-width: 980px) {
+      .half, .third, .two-thirds {
+        grid-column: span 12;
+      }
+    }
+
+    .metric {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .metric .label {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .metric .value {
+      font-size: 34px;
+      font-weight: 800;
+    }
+
+    .metric .hint {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .process {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 980px) {
+      .process {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .step {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      min-height: 112px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step.active {
+      border-color: rgba(96,165,250,0.9);
+      box-shadow: 0 0 25px rgba(96,165,250,0.18);
+    }
+
+    .step.done {
+      border-color: rgba(52,211,153,0.75);
+    }
+
+    .step .num {
+      color: var(--blue);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .step h3 {
+      margin: 8px 0 6px;
+      font-size: 16px;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .progress-wrap {
+      margin-top: 18px;
+      height: 12px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+
+    .progress {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #60a5fa, #34d399, #a78bfa);
+      border-radius: 999px;
+      transition: width 0.35s ease;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .controls input {
+      min-width: 260px;
+      flex: 1;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      overflow: hidden;
+      border-radius: 18px;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: rgba(255,255,255,0.06);
+    }
+
+    tr:hover td {
+      background: rgba(255,255,255,0.04);
+    }
+
+    .tag {
+      display: inline-flex;
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .ok { background: rgba(52,211,153,0.16); color: #86efac; }
+    .warn { background: rgba(251,191,36,0.16); color: #fde68a; }
+    .bad { background: rgba(251,113,133,0.16); color: #fecdd3; }
+    .info { background: rgba(96,165,250,0.16); color: #bfdbfe; }
+    .purple { background: rgba(167,139,250,0.16); color: #ddd6fe; }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .timeline-item {
+      border-left: 3px solid var(--blue);
+      padding: 8px 0 8px 14px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .timeline-item strong {
+      color: var(--text);
+    }
+
+    .chart {
+      height: 260px;
+      display: flex;
+      align-items: end;
+      gap: 14px;
+      padding-top: 18px;
+    }
+
+    .bar {
+      flex: 1;
+      min-width: 38px;
+      border-radius: 14px 14px 6px 6px;
+      background: linear-gradient(180deg, #60a5fa, #2563eb);
+      position: relative;
+      transition: 0.4s ease;
+    }
+
+    .bar span {
+      position: absolute;
+      top: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .bar small {
+      position: absolute;
+      bottom: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .note {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .footer {
+      margin-top: 30px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
+
 <body>
-  <div class="topnav">
-    <div class="container navinner">
-      <div class="brand"><span class="dot"></span> ReconFlow Commerce</div>
-      <div class="navlinks">
-        <button onclick="scrollToId('hero')">Обзор</button>
-        <button onclick="scrollToId('sources')">Источники</button>
-        <button onclick="scrollToId('simulator')">Симулятор</button>
-        <button onclick="scrollToId('registry')">Реестр</button>
-        <button onclick="scrollToId('exceptions')">Исключения</button>
-        <button onclick="scrollToId('analytics')">Аналитика</button>
+  <header>
+    <div class="topline">
+      <div class="brand">
+        <span class="badge">MVP для ВКР · Автоматизированный учет и контроль расчетных операций</span>
+        <h1>FinControl VKR</h1>
+      </div>
+      <div class="actions">
+        <button class="primary" onclick="runProcessing()">Запустить обработку</button>
+        <button onclick="resetDemo()">Сбросить</button>
+        <button class="green" onclick="exportJSON()">Экспорт JSON</button>
+        <button onclick="exportCSV()">Экспорт CSV</button>
       </div>
     </div>
-  </div>
+    <p class="subtitle">
+      Демонстрационная платформа показывает, как разрозненные события электронной коммерции
+      преобразуются в проверенный расчетно-учетный реестр: загрузка событий, нормализация,
+      сопоставление заказа, оплаты, комиссии, возврата и банковского поступления, выявление исключений
+      и формирование итоговой аналитики.
+    </p>
+  </header>
 
-  <main class="container">
-    <section id="hero" class="hero">
-      <div class="badge">Интерактивный MVP • e-commerce + лицензии</div>
-      <h1>Платформа автоматизированного учёта и контроля расчётных операций</h1>
-      <div class="sub">ReconFlow Commerce объединяет события из интернет-магазина, маркетплейса, логистики, биллинга, платёжного шлюза и банка, автоматически сопоставляет их в единый контур и формирует прозрачную расчётно-учётную аналитику.</div>
-      <div class="actions">
-        <button class="ghostbtn primary" onclick="setMode('overview'); scrollToId('analytics')">Быстрый обзор</button>
-        <button class="ghostbtn secondary" onclick="setMode('interactive'); scrollToId('simulator')">Интерактивная демонстрация</button>
-        <button class="ghostbtn secondary" onclick="startTour()">Как работает платформа</button>
-        <button class="ghostbtn secondary" onclick="togglePresentation()">Режим презентации</button>
+  <main>
+    <section class="grid">
+      <div class="card third metric">
+        <div class="label">Обработано событий</div>
+        <div class="value" id="eventsCount">0</div>
+        <div class="hint">Заказы, оплаты, комиссии, возвраты, банковские поступления</div>
       </div>
-      <div class="heroGrid">
-        <div><div class="metrics" id="metrics"></div></div>
-        <div class="card cardPad">
-          <div class="panelHeader"><h3>Сценарий демо</h3><span class="small muted" id="modeLabel">Режим: интерактивная демонстрация</span></div>
-          <div class="scenarioList">
-            <div class="scenarioItem"><div class="num">1</div><div>Показать готовый dashboard по базовой неделе из 20 операций.</div></div>
-            <div class="scenarioItem"><div class="num">2</div><div>Добавить 2–3 новые операции через симулятор и показать live-пересчёт.</div></div>
-            <div class="scenarioItem"><div class="num">3</div><div>Открыть одну проблемную операцию и показать детализацию цепочки обработки.</div></div>
-            <div class="scenarioItem"><div class="num">4</div><div>Запустить guided walkthrough: источники → нормализация → сопоставление → исключения → итог.</div></div>
+
+      <div class="card third metric">
+        <div class="label">Сформировано операций</div>
+        <div class="value" id="ordersCount">0</div>
+        <div class="hint">Сгруппированные жизненные циклы заказов</div>
+      </div>
+
+      <div class="card third metric">
+        <div class="label">Исключения контроля</div>
+        <div class="value" id="exceptionsCount">0</div>
+        <div class="hint">Расхождения, возвраты, неполные цепочки</div>
+      </div>
+
+      <div class="card wide">
+        <h2>Анимация процесса обработки</h2>
+        <p class="note">
+          Для демонстрации комиссии процесс проходит 6 этапов. Каждый этап имитирует работу платформы
+          как контрольного слоя между маркетплейсом, платежной системой, банком и бухгалтерским контуром.
+        </p>
+
+        <div class="process">
+          <div class="step" id="step0">
+            <div class="num">01</div>
+            <h3>Импорт</h3>
+            <p>Загрузка 100+ цифровых событий из разных источников.</p>
+          </div>
+          <div class="step" id="step1">
+            <div class="num">02</div>
+            <h3>Нормализация</h3>
+            <p>Приведение дат, сумм, статусов и идентификаторов к единому формату.</p>
+          </div>
+          <div class="step" id="step2">
+            <div class="num">03</div>
+            <h3>Сопоставление</h3>
+            <p>Связь заказа, оплаты, комиссии, возврата и поступления.</p>
+          </div>
+          <div class="step" id="step3">
+            <div class="num">04</div>
+            <h3>Классификация</h3>
+            <p>Выручка, комиссия, возврат, спорная операция, аванс.</p>
+          </div>
+          <div class="step" id="step4">
+            <div class="num">05</div>
+            <h3>Контроль</h3>
+            <p>Поиск расхождений, неполных цепочек и нестандартных операций.</p>
+          </div>
+          <div class="step" id="step5">
+            <div class="num">06</div>
+            <h3>Реестр</h3>
+            <p>Формирование итоговой таблицы для учета и управленческой аналитики.</p>
           </div>
         </div>
+
+        <div class="progress-wrap">
+          <div class="progress" id="progress"></div>
+        </div>
+      </div>
+
+      <div class="card two-thirds">
+        <h2>Итоговый реестр расчетных операций</h2>
+        <div class="controls">
+          <input id="searchInput" placeholder="Поиск по заказу, источнику или статусу..." oninput="renderTable()" />
+          <select id="statusFilter" onchange="renderTable()">
+            <option value="all">Все статусы</option>
+            <option value="ok">Без отклонений</option>
+            <option value="exception">С исключениями</option>
+            <option value="return">Возврат</option>
+          </select>
+          <select id="sourceFilter" onchange="renderTable()">
+            <option value="all">Все источники</option>
+            <option value="Marketplace">Marketplace</option>
+            <option value="Payment Gateway">Payment Gateway</option>
+            <option value="Bank">Bank</option>
+          </select>
+        </div>
+        <div style="overflow:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Заказ</th>
+                <th>Источник</th>
+                <th>Сумма</th>
+                <th>Комиссия</th>
+                <th>К выплате</th>
+                <th>Статус</th>
+                <th>Действие</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <tr>
+                <td colspan="7" class="note">Нажми «Запустить обработку», чтобы сформировать реестр.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card third">
+        <h2>Карточка операции</h2>
+        <div id="details" class="note">
+          Выбери операцию в таблице, чтобы увидеть жизненный цикл заказа.
+        </div>
+      </div>
+
+      <div class="card half">
+        <h2>Структура выявленных исключений</h2>
+        <div class="chart" id="chart"></div>
+      </div>
+
+      <div class="card half">
+        <h2>Учетно-контрольная интерпретация</h2>
+        <p class="note">
+          MVP демонстрирует, что платформа не заменяет бухгалтерскую систему. Она готовит проверенный массив данных:
+          связывает события, выделяет отклонения, классифицирует операции и формирует реестр, который может быть
+          использован бухгалтерией, финансовым менеджером или внутренним контролем.
+        </p>
+        <div id="summary"></div>
       </div>
     </section>
 
-    <section class="section" id="modes">
-      <div class="sectionTitle">Режимы работы</div>
-      <div class="sectionSub">Один и тот же MVP можно просматривать как итоговый dashboard, как живую симуляцию входящих событий или как чистый интерфейс для защиты.</div>
-      <div class="modeGrid">
-        <div class="modeCard active" data-mode-card="overview" onclick="setMode('overview')"><div class="title">Быстрый обзор</div><div class="muted">Сразу показывает итоговый контур, ключевые метрики и эффект внедрения.</div></div>
-        <div class="modeCard" data-mode-card="interactive" onclick="setMode('interactive')"><div class="title">Интерактивная демонстрация</div><div class="muted">Позволяет добавлять новые операции и наблюдать перерасчёт в реальном времени.</div></div>
-        <div class="modeCard" data-mode-card="presentation" onclick="setMode('presentation')"><div class="title">Режим презентации</div><div class="muted">Крупнее KPI, чище интерфейс и фокус на результате для показа на защите.</div></div>
-      </div>
-    </section>
-
-    <section class="section" id="sources">
-      <div class="sectionTitle">Источники данных</div>
-      <div class="sectionSub">Разрозненные события собираются в единый профиль операции. Клик по карточке фильтрует реестр по соответствующему контуру.</div>
-      <div class="sourceGrid" id="sourceGrid"></div>
-    </section>
-
-    <section class="section" id="simulator">
-      <div class="sectionTitle">Симулятор входящих операций</div>
-      <div class="sectionSub">Вместо свободного ввода используются заранее подготовленные сценарии. После добавления кейса реестр, исключения и аналитика обновляются мгновенно.</div>
-      <div class="simGrid">
-        <div class="card cardPad">
-          <div class="panelHeader">
-            <h3>Добавить новую операцию</h3>
-            <div class="miniRow">
-              <button class="miniBtn" onclick="addRandomByKind('good')">Добавить штатный кейс</button>
-              <button class="miniBtn" onclick="addRandomByKind('bad')">Добавить проблемный кейс</button>
-              <button class="miniBtn" onclick="simulateBatch()">Смоделировать 3 операции</button>
-              <button class="miniBtn" onclick="resetData()">Сбросить сценарий</button>
-            </div>
-          </div>
-          <div class="caseGrid" id="caseGrid"></div>
-        </div>
-        <div class="card cardPad">
-          <div class="panelHeader"><h3>Путь данных внутри платформы</h3><button class="tourBtn" onclick="startTour()">Запустить walkthrough</button></div>
-          <div class="timeline">
-            <div class="tlItem"><div class="tlDot"></div><div class="tlText"><strong>Источники:</strong> сайт, маркетплейс, логистика, биллинг, платёжный шлюз и банковская выписка.</div></div>
-            <div class="tlItem"><div class="tlDot"></div><div class="tlText"><strong>Нормализация:</strong> события приводятся к единому формату операции с атрибутами суммы, статуса, удержаний, возвратов и выплат.</div></div>
-            <div class="tlItem"><div class="tlDot"></div><div class="tlText"><strong>Сопоставление:</strong> система связывает заказ, платёж, комиссию, возврат, выплату и период признания.</div></div>
-            <div class="tlItem"><div class="tlDot"></div><div class="tlText"><strong>Исключения:</strong> нестандартные кейсы не теряются, а выделяются в отдельный контур контроля.</div></div>
-            <div class="tlItem"><div class="tlDot"></div><div class="tlText"><strong>Результат:</strong> формируется единый дашборд с прозрачной аналитикой и финансовым эффектом.</div></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="registry">
-      <div class="sectionTitle">Единый реестр операций</div>
-      <div class="sectionSub">Все события собираются в единый рабочий контур. Клик по строке открывает подробную карточку операции.</div>
-      <div class="toolbar">
-        <div class="tagRow" id="tagRow"></div>
-        <div class="filters">
-          <select id="dayFilter" onchange="renderAll()"><option value="all">Все дни</option><option>Пн</option><option>Вт</option><option>Ср</option><option>Чт</option><option>Пт</option><option>Сб</option><option>Вс</option></select>
-          <select id="typeFilter" onchange="renderAll()"><option value="all">Все типы</option><option value="Товар">Товары</option><option value="Лицензия">Лицензии</option></select>
-          <select id="statusFilter" onchange="renderAll()"><option value="all">Все статусы</option><option value="Сопоставлено">Сопоставлено</option><option value="Автосвязка">Автосвязка</option><option value="Автокоррекция">Автокоррекция</option><option value="Исключение">Исключение</option></select>
-          <input id="searchInput" placeholder="Поиск по ID, каналу или проблеме" oninput="renderAll()"/>
-        </div>
-      </div>
-      <div class="layoutTwo">
-        <div class="card cardPad">
-          <div style="overflow:auto"><table><thead><tr><th>ID</th><th>День</th><th>Тип</th><th>Канал</th><th>Сумма</th><th>Комиссия</th><th>Статус</th><th>Проблема</th><th>Эффект</th></tr></thead><tbody id="registryBody"></tbody></table></div>
-        </div>
-        <div class="card cardPad drawer" id="detailPanel">
-          <div class="panelHeader"><h3>Детали операции</h3><span class="small muted">Кликни на строку или карточку исключения</span></div>
-          <div id="detailContent" class="muted">Выбери операцию, чтобы увидеть, как платформа интерпретировала событие, сопоставила цепочку и рассчитала эффект.</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="exceptions">
-      <div class="sectionTitle">Центр исключений</div>
-      <div class="sectionSub">Нестандартные операции не скрываются, а переводятся в отдельный контур контроля и ручной квалификации.</div>
-      <div class="exceptionGrid" id="exceptionGrid"></div>
-    </section>
-
-    <section class="section" id="analytics">
-      <div class="sectionTitle">Аналитика и эффект</div>
-      <div class="sectionSub">Все показатели пересчитываются после добавления новых операций. В MVP показан не только статус обработки, но и экономическая логика результата.</div>
-      <div class="analyticsGrid">
-        <div class="card chartCard"><h3>Статусы обработки</h3><div class="barWrap" id="statusBars"></div><div class="legend"><span><i class="dot" style="background:var(--green)"></i>Сопоставлено</span><span><i class="dot" style="background:var(--blue)"></i>Автоматически закрыто</span><span><i class="dot" style="background:var(--amber)"></i>Исключения</span></div></div>
-        <div class="card chartCard"><h3>Структура экономии</h3><div class="barWrap" id="savingBars"></div><div class="legend"><span><i class="dot" style="background:var(--blue)"></i>Комиссии и удержания</span><span><i class="dot" style="background:var(--amber)"></i>Возвраты и корректировки</span><span><i class="dot" style="background:var(--green)"></i>Лицензионная выручка</span><span><i class="dot" style="background:var(--red)"></i>Ручная сверка</span></div></div>
-        <div class="card chartCard"><h3>Структура потока</h3><div class="barWrap" id="typeBars"></div><div class="legend"><span><i class="dot" style="background:var(--cyan)"></i>Товары</span><span><i class="dot" style="background:var(--blue)"></i>Лицензии</span></div></div>
-      </div>
-    </section>
-
-    <section class="section" id="summary">
-      <div class="sectionTitle">Итоговый результат</div>
-      <div class="sectionSub">Продукт собирает данные в единый контур, автоматически закрывает типовые сценарии, отдельно обрабатывает исключения и помогает снизить трудозатраты на сверку и риск искажения финансовой информации.</div>
-      <div class="summary">
-        <div class="card cardPad">
-          <div class="panelHeader"><h3>Краткий вывод</h3></div>
-          <div class="timeline">
-            <div class="tlItem"><div class="tlDot"></div><div class="tlText">Разрозненные события из нескольких систем превращаются в единый реестр операций.</div></div>
-            <div class="tlItem"><div class="tlDot"></div><div class="tlText">Типовые кейсы закрываются автоматически по правилам сопоставления и интерпретации.</div></div>
-            <div class="tlItem"><div class="tlDot"></div><div class="tlText">Нестандартные операции переходят в центр исключений с прозрачной логикой контроля.</div></div>
-            <div class="tlItem"><div class="tlDot"></div><div class="tlText">Финансовый эффект выражается в снижении непрозрачных удержаний, ошибок периода и объёма ручной сверки.</div></div>
-          </div>
-          <div class="actions"><button class="ghostbtn primary" onclick="startTour()">Повторить демо</button><button class="ghostbtn secondary" onclick="scrollToId('hero')">Вернуться наверх</button></div>
-        </div>
-        <div class="card cardPad">
-          <div class="small muted">Предотвращённый эффект за неделю</div>
-          <div class="bigNumber" id="finalWeek">11 100 ₽</div>
-          <div class="small muted">Потенциал в месяц</div>
-          <div style="font-size:34px;font-weight:900;margin-top:8px" id="finalMonth">44 400 ₽</div>
-          <div class="detailList" style="margin-top:16px" id="finalStats"></div>
-        </div>
-      </div>
-    </section>
-
-    <div class="footer">ReconFlow Commerce • v5 demo • статический интерактивный прототип для публикации на GitHub Pages</div>
+    <div class="footer">
+      FinControl VKR · MVP демонстрационной платформы для защиты ВКР · Один HTML-файл без сборки и зависимостей
+    </div>
   </main>
 
-  <button class="floatingPulse" onclick="togglePresentation()">Presentation mode</button>
+  <script>
+    let rawEvents = [];
+    let processed = [];
+    let isProcessed = false;
 
-  <div class="tourOverlay" id="tourOverlay">
-    <div class="tourStage" id="tourStage"></div>
-    <div class="tourBox">
-      <div class="tourTop"><div><div class="tourTitle" id="tourTitle"></div><div class="tourDesc" id="tourDesc"></div></div></div>
-      <div class="tourActions">
-        <button class="ghostbtn secondary" onclick="prevTour()">Назад</button>
-        <button class="ghostbtn secondary" onclick="stopTour()">Пропустить</button>
-        <button class="ghostbtn primary" onclick="nextTour()">Дальше</button>
-      </div>
-    </div>
-  </div>
+    const stages = [
+      "Импорт событий",
+      "Нормализация данных",
+      "Сопоставление расчетных событий",
+      "Классификация операций",
+      "Контроль исключений",
+      "Формирование итогового реестра"
+    ];
 
-<script>
-const INITIAL=[{id:'ORD-001',day:'Пн',type:'Товар',channel:'Сайт',source:'Интернет-магазин / OMS',gross:12400,fee:620,refund:0,expectedPayout:11780,actualPayout:11780,platformStatus:'Сопоставлено',issueType:'—',preventedLoss:0,risk:'Низкий',beforeState:'Данные заказа, оплаты и банка сверяются вручную.',action:'Автоматически собрано в единый профиль операции.'},{id:'ORD-002',day:'Пн',type:'Товар',channel:'Маркетплейс',source:'Маркетплейс',gross:8900,fee:712,refund:0,expectedPayout:8188,actualPayout:8188,platformStatus:'Сопоставлено',issueType:'—',preventedLoss:0,risk:'Низкий',beforeState:'Отчёт площадки и выписка проверяются вручную.',action:'Автоматически сверено с выплатой маркетплейса.'},{id:'ORD-003',day:'Вт',type:'Товар',channel:'Сайт',source:'Интернет-магазин / OMS',gross:15600,fee:780,refund:0,expectedPayout:14820,actualPayout:14820,platformStatus:'Сопоставлено',issueType:'—',preventedLoss:0,risk:'Низкий',beforeState:'Операция проходит штатно, но требует ручного подтверждения.',action:'Связка заказ → платёж → поступление найдена автоматически.'},{id:'ORD-004',day:'Вт',type:'Товар',channel:'Маркетплейс',source:'Маркетплейс',gross:6800,fee:544,refund:0,expectedPayout:6256,actualPayout:6256,platformStatus:'Сопоставлено',issueType:'—',preventedLoss:0,risk:'Низкий',beforeState:'Данные разбросаны между площадкой и банком.',action:'Выплата и удержание комиссии распознаны по правилу канала.'},{id:'ORD-005',day:'Ср',type:'Товар',channel:'Сайт',source:'Интернет-магазин / OMS',gross:21300,fee:1065,refund:0,expectedPayout:20235,actualPayout:20235,platformStatus:'Сопоставлено',issueType:'—',preventedLoss:0,risk:'Низкий',beforeState:'Заказ и платёж есть, но финрезультат подтверждается вручную.',action:'Операция классифицирована как штатная.'},{id:'ORD-006',day:'Ср',type:'Товар',channel:'Сайт',source:'Платёжный шлюз',gross:10200,fee:510,refund:0,expectedPayout:9690,actualPayout:9690,platformStatus:'Сопоставлено',issueType:'—',preventedLoss:0,risk:'Низкий',beforeState:'Банк и OMS не связаны единым идентификатором.',action:'Паттерн reference позволил закрыть операцию автоматически.'},{id:'ORD-007',day:'Ср',type:'Товар',channel:'Маркетплейс',source:'Маркетплейс',gross:4900,fee:392,refund:0,expectedPayout:4508,actualPayout:4508,platformStatus:'Сопоставлено',issueType:'—',preventedLoss:0,risk:'Низкий',beforeState:'Выплата и комиссия из кабинета площадки проверяются вручную.',action:'Комиссия выделена и подтверждена автоматически.'},{id:'ORD-008',day:'Чт',type:'Товар',channel:'Сайт',source:'Логистический посредник',gross:18700,fee:935,refund:0,expectedPayout:17765,actualPayout:17765,platformStatus:'Сопоставлено',issueType:'—',preventedLoss:0,risk:'Низкий',beforeState:'Логистика и платёж проверяются отдельно.',action:'Система связала заказ, доставку и зачисление средств.'},{id:'ORD-009',day:'Чт',type:'Товар',channel:'Маркетплейс',source:'Маркетплейс',gross:13500,fee:1080,refund:0,expectedPayout:12420,actualPayout:11570,platformStatus:'Автокоррекция',issueType:'Скрытое удержание логистики',preventedLoss:850,risk:'Средний',beforeState:'Компания видит только недоплату без причины.',action:'Выделено дополнительное удержание логистики и пересчитана чистая выплата.'},{id:'ORD-010',day:'Чт',type:'Товар',channel:'Сайт',source:'Платёжный шлюз',gross:9800,fee:490,refund:9800,expectedPayout:0,actualPayout:0,platformStatus:'Автосвязка',issueType:'Неидентифицированный возврат',preventedLoss:1300,risk:'Средний',beforeState:'Возврат живёт отдельным событием и искажает картину продаж.',action:'Платформа связала возврат с исходной продажей.'},{id:'ORD-011',day:'Пт',type:'Товар',channel:'Маркетплейс',source:'Маркетплейс',gross:11400,fee:912,refund:2400,expectedPayout:8088,actualPayout:8088,platformStatus:'Исключение',issueType:'Частичный возврат',preventedLoss:650,risk:'Средний',beforeState:'Есть риск задвоения корректировки и ошибки периода.',action:'Операция передана в центр исключений для подтверждения.'},{id:'ORD-012',day:'Пт',type:'Товар',channel:'Сайт',source:'Банковская выписка',gross:5600,fee:280,refund:0,expectedPayout:5320,actualPayout:5320,platformStatus:'Автосвязка',issueType:'Банк без reference',preventedLoss:450,risk:'Низкий',beforeState:'Выписка не содержит прямой идентификатор заказа.',action:'Платформа связала поступление по сумме и времени.'},{id:'ORD-013',day:'Сб',type:'Товар',channel:'Маркетплейс',source:'Маркетплейс',gross:16200,fee:1296,refund:0,expectedPayout:14904,actualPayout:13804,platformStatus:'Исключение',issueType:'Подозрение на двойную комиссию',preventedLoss:1100,risk:'Высокий',beforeState:'Недоплата выглядит как штатная выплата меньшего размера.',action:'Отклонение expected vs actual payout вынесено в ручную проверку.'},{id:'ORD-014',day:'Сб',type:'Товар',channel:'Сайт',source:'Интернет-магазин / OMS',gross:14900,fee:745,refund:0,expectedPayout:14155,actualPayout:14155,platformStatus:'Сопоставлено',issueType:'—',preventedLoss:0,risk:'Низкий',beforeState:'Типовая операция требует ручного просмотра.',action:'Закрыта автоматически без участия бухгалтера.'},{id:'LIC-001',day:'Пн',type:'Лицензия',channel:'Биллинг',source:'Биллинг лицензий',gross:3900,fee:195,refund:0,expectedPayout:3705,actualPayout:3705,platformStatus:'Сопоставлено',issueType:'—',preventedLoss:0,risk:'Низкий',beforeState:'Платёж и договор проверяются вручную.',action:'Платформа связала платёж, договор и период использования.'},{id:'LIC-002',day:'Вт',type:'Лицензия',channel:'Биллинг',source:'Биллинг лицензий',gross:36000,fee:0,refund:0,expectedPayout:36000,actualPayout:36000,platformStatus:'Исключение',issueType:'Годовая лицензия',preventedLoss:3000,risk:'Высокий',beforeState:'Годовой платёж могут ошибочно признать выручкой текущей недели.',action:'Правило period recognition переводит операцию в исключение.'},{id:'LIC-003',day:'Ср',type:'Лицензия',channel:'Биллинг',source:'Биллинг лицензий',gross:5400,fee:270,refund:0,expectedPayout:5130,actualPayout:5130,platformStatus:'Сопоставлено',issueType:'—',preventedLoss:0,risk:'Низкий',beforeState:'Продление проходит штатно, но без единой цепочки данных.',action:'Продление сверено автоматически.'},{id:'LIC-004',day:'Пт',type:'Лицензия',channel:'Биллинг',source:'Биллинг лицензий',gross:24000,fee:0,refund:0,expectedPayout:24000,actualPayout:24000,platformStatus:'Сопоставлено',issueType:'—',preventedLoss:0,risk:'Низкий',beforeState:'Лицензионная выручка отражается без автоматической валидации периода.',action:'Операция подтверждена как штатная.'},{id:'LIC-005',day:'Сб',type:'Лицензия',channel:'Партнёрский канал',source:'Биллинг лицензий',gross:18000,fee:1250,refund:0,expectedPayout:16750,actualPayout:16750,platformStatus:'Автокоррекция',issueType:'Комиссия партнёра',preventedLoss:1250,risk:'Средний',beforeState:'Видно только net-поступление, структура сделки неочевидна.',action:'Платформа разделила gross revenue и partner fee.'},{id:'LIC-006',day:'Вс',type:'Лицензия',channel:'Биллинг',source:'Биллинг лицензий',gross:12000,fee:0,refund:0,expectedPayout:12000,actualPayout:12000,platformStatus:'Исключение',issueType:'Платёж без связки с договором',preventedLoss:2500,risk:'Высокий',beforeState:'Платёж найден, но непонятно, какому периоду и договору он относится.',action:'Операция отправлена в центр исключений для ручной квалификации.'}];
-const CASES=[{key:'std-site',kind:'good',title:'Штатная продажа товара',sub:'Сайт • типовой сценарий без отклонений',op:{id:'ORD-N01',day:'Вс',type:'Товар',channel:'Сайт',source:'Интернет-магазин / OMS',gross:13200,fee:660,refund:0,expectedPayout:12540,actualPayout:12540,platformStatus:'Сопоставлено',issueType:'—',preventedLoss:0,risk:'Низкий',beforeState:'Новая операция требует ручной сверки.',action:'Автоматически подтверждена как штатная.'}},{key:'std-mp',kind:'good',title:'Продажа через маркетплейс',sub:'Маркетплейс • корректная выплата и комиссия',op:{id:'ORD-N02',day:'Вс',type:'Товар',channel:'Маркетплейс',source:'Маркетплейс',gross:9800,fee:784,refund:0,expectedPayout:9016,actualPayout:9016,platformStatus:'Сопоставлено',issueType:'—',preventedLoss:0,risk:'Низкий',beforeState:'Выплата площадки требует сверки.',action:'Корректно сопоставлена с комиссией и выплатой.'}},{key:'std-lic',kind:'good',title:'Продление лицензии',sub:'Биллинг • стандартное продление',op:{id:'LIC-N01',day:'Вс',type:'Лицензия',channel:'Биллинг',source:'Биллинг лицензий',gross:7200,fee:360,refund:0,expectedPayout:6840,actualPayout:6840,platformStatus:'Сопоставлено',issueType:'—',preventedLoss:0,risk:'Низкий',beforeState:'Продление добавляется в ручной реестр.',action:'Подтверждено как штатное продление.'}},{key:'hidden-fee',kind:'bad',title:'Скрытое удержание маркетплейса',sub:'Проблемный кейс • доп. удержание логистики',op:{id:'ORD-N03',day:'Вс',type:'Товар',channel:'Маркетплейс',source:'Маркетплейс',gross:14100,fee:1128,refund:0,expectedPayout:12972,actualPayout:12022,platformStatus:'Автокоррекция',issueType:'Скрытое удержание логистики',preventedLoss:950,risk:'Средний',beforeState:'Недоплата видна без ясной причины.',action:'Платформа выделяет скрытое удержание и пересчитывает выплату.'}},{key:'refund-unlinked',kind:'bad',title:'Возврат без связи с продажей',sub:'Проблемный кейс • возврат потерял исходную операцию',op:{id:'ORD-N04',day:'Вс',type:'Товар',channel:'Сайт',source:'Платёжный шлюз',gross:8700,fee:435,refund:8700,expectedPayout:0,actualPayout:0,platformStatus:'Автосвязка',issueType:'Неидентифицированный возврат',preventedLoss:1200,risk:'Средний',beforeState:'Возврат существует отдельно от исходной продажи.',action:'Автоматически связана исходная и обратная операция.'}},{key:'partial-refund',kind:'bad',title:'Частичный возврат',sub:'Проблемный кейс • требуется ручная квалификация',op:{id:'ORD-N05',day:'Вс',type:'Товар',channel:'Маркетплейс',source:'Маркетплейс',gross:12700,fee:1016,refund:3000,expectedPayout:8684,actualPayout:8684,platformStatus:'Исключение',issueType:'Частичный возврат',preventedLoss:700,risk:'Средний',beforeState:'Есть риск задвоения корректировок.',action:'Операция передана в контур исключений.'}},{key:'license-year',kind:'bad',title:'Годовая лицензия',sub:'Проблемный кейс • риск ошибки периода',op:{id:'LIC-N02',day:'Вс',type:'Лицензия',channel:'Биллинг',source:'Биллинг лицензий',gross:42000,fee:0,refund:0,expectedPayout:42000,actualPayout:42000,platformStatus:'Исключение',issueType:'Годовая лицензия',preventedLoss:3200,risk:'Высокий',beforeState:'Сумма может быть признана выручкой одного периода.',action:'Платформа выносит кейс в исключения и защищает логику period recognition.'}},{key:'partner-fee',kind:'bad',title:'Партнёрская комиссия',sub:'Проблемный кейс • net-поступление без структуры',op:{id:'LIC-N03',day:'Вс',type:'Лицензия',channel:'Партнёрский канал',source:'Биллинг лицензий',gross:21000,fee:1700,refund:0,expectedPayout:19300,actualPayout:19300,platformStatus:'Автокоррекция',issueType:'Комиссия партнёра',preventedLoss:1700,risk:'Средний',beforeState:'Виден только net-платёж без разделения компонентов.',action:'Платформа отделяет валовую выручку от комиссии партнёра.'}},{key:'bank-noref',kind:'bad',title:'Платёж в банке без reference',sub:'Проблемный кейс • поступление без прямого ID',op:{id:'ORD-N06',day:'Вс',type:'Товар',channel:'Сайт',source:'Банковская выписка',gross:6200,fee:310,refund:0,expectedPayout:5890,actualPayout:5890,platformStatus:'Автосвязка',issueType:'Банк без reference',preventedLoss:500,risk:'Низкий',beforeState:'Банк фиксирует платёж без связи с заказом.',action:'Использованы сумма, время и шаблон reference для связки.'}},{key:'double-fee',kind:'bad',title:'Двойная комиссия',sub:'Проблемный кейс • подозрение на лишнее удержание',op:{id:'ORD-N07',day:'Вс',type:'Товар',channel:'Маркетплейс',source:'Маркетплейс',gross:15400,fee:1232,refund:0,expectedPayout:14168,actualPayout:12968,platformStatus:'Исключение',issueType:'Подозрение на двойную комиссию',preventedLoss:1200,risk:'Высокий',beforeState:'Сумма выплаты не соответствует ожидаемой.',action:'Отклонение направлено в ручную проверку.'}},{key:'license-contract',kind:'bad',title:'Лицензия без связи с договором',sub:'Проблемный кейс • платёж не связан с контрактом',op:{id:'LIC-N04',day:'Вс',type:'Лицензия',channel:'Биллинг',source:'Биллинг лицензий',gross:14500,fee:0,refund:0,expectedPayout:14500,actualPayout:14500,platformStatus:'Исключение',issueType:'Платёж без связки с договором',preventedLoss:2600,risk:'Высокий',beforeState:'Есть деньги, но нет корректной договорной привязки.',action:'Операция вынесена в исключения для квалификации.'}}];
-const SOURCES=[['Интернет-магазин / OMS','Заказы и статусы отгрузки'],['Маркетплейс','Выплаты, комиссии и удержания'],['Платёжный шлюз','Оплаты и reference транзакций'],['Логистический посредник','Доставка и логистические удержания'],['Биллинг лицензий','Продления, сроки и договора'],['Банковская выписка','Фактическое поступление средств']];
-let data=JSON.parse(JSON.stringify(INITIAL)); let selectedId=data[0].id; let mode='interactive'; let activeSource='all'; let activeTag='all'; let isPresentation=false;
-const tags=[['all','Все кейсы'],['risk','Только риск'],['auto','Автоматически обработанные'],['effect','С денежным эффектом']];
-function money(v){return new Intl.NumberFormat('ru-RU',{style:'currency',currency:'RUB',maximumFractionDigits:0}).format(v||0)}
-function pct(v,t){return !t?0:Math.round(v/t*100)}
-function scrollToId(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth'})}
-function metricsOf(arr){const total=arr.length,matched=arr.filter(x=>x.platformStatus==='Сопоставлено').length,auto=arr.filter(x=>x.platformStatus==='Автосвязка'||x.platformStatus==='Автокоррекция').length,exceptions=arr.filter(x=>x.platformStatus==='Исключение').length,weekEffect=arr.reduce((s,x)=>s+(x.preventedLoss||0),0),monthEffect=weekEffect*4,products=arr.filter(x=>x.type==='Товар').length,licenses=arr.filter(x=>x.type==='Лицензия').length,gross=arr.reduce((s,x)=>s+x.gross,0); return {total,matched,auto,exceptions,weekEffect,monthEffect,products,licenses,gross}}
-function renderMetrics(){const m=metricsOf(data);document.getElementById('metrics').innerHTML=`<div class="metric"><div class="label">Операций в системе</div><div class="value">${m.total}</div><div class="delta">Базовая неделя + новые кейсы</div></div><div class="metric"><div class="label">Автоматически обработано</div><div class="value">${m.matched+m.auto}</div><div class="delta">${pct(m.matched+m.auto,m.total)}% от потока</div></div><div class="metric"><div class="label">Исключений</div><div class="value">${m.exceptions}</div><div class="delta">Требуют отдельной квалификации</div></div><div class="metric"><div class="label">Эффект за неделю</div><div class="value">${money(m.weekEffect)}</div><div class="delta">Потенциал в месяц: ${money(m.monthEffect)}</div></div>`;document.getElementById('finalWeek').textContent=money(m.weekEffect);document.getElementById('finalMonth').textContent=money(m.monthEffect);document.getElementById('finalStats').innerHTML=`<div class="kv"><span class="k">Всего операций</span><strong>${m.total}</strong></div><div class="kv"><span class="k">Товары / лицензии</span><strong>${m.products} / ${m.licenses}</strong></div><div class="kv"><span class="k">Автоматическая обработка</span><strong>${m.matched+m.auto}</strong></div><div class="kv"><span class="k">Операции в исключениях</span><strong>${m.exceptions}</strong></div><div class="kv"><span class="k">Валовый поток</span><strong>${money(m.gross)}</strong></div>`}
-function renderModes(){document.querySelectorAll('[data-mode-card]').forEach(el=>el.classList.toggle('active',el.dataset.modeCard===mode));document.getElementById('modeLabel').textContent={overview:'Режим: быстрый обзор',interactive:'Режим: интерактивная демонстрация',presentation:'Режим: презентация'}[mode]}
-function renderSources(){const counts={};data.forEach(op=>counts[op.source]=(counts[op.source]||0)+1);document.getElementById('sourceGrid').innerHTML=SOURCES.map(([name,hint])=>`<div class="source ${activeSource===name?'active':''}" onclick="toggleSource('${name.replace(/'/g,"&#39;")}')"><div><strong>${name}</strong></div><div class="count">${counts[name]||0}</div><div class="hint">${hint}</div></div>`).join('')}
-function renderCases(){document.getElementById('caseGrid').innerHTML=CASES.map(c=>`<button class="caseBtn ${c.kind==='good'?'good':'bad'}" onclick="addCase('${c.key}')"><strong>${c.title}</strong><small>${c.sub}</small></button>`).join('')}
-function renderTags(){document.getElementById('tagRow').innerHTML=tags.map(([k,l])=>`<button class="tag ${activeTag===k?'active':''}" onclick="setTag('${k}')">${l}</button>`).join('')}
-function statusClass(s){if(s==='Сопоставлено') return 's-ok'; if(s==='Автосвязка'||s==='Автокоррекция') return 's-auto'; return 's-ex'}
-function filteredData(){const q=document.getElementById('searchInput').value.trim().toLowerCase(),day=document.getElementById('dayFilter').value,type=document.getElementById('typeFilter').value,status=document.getElementById('statusFilter').value;return data.filter(op=>{if(activeSource!=='all'&&op.source!==activeSource) return false;if(activeTag==='risk'&&op.issueType==='—') return false;if(activeTag==='auto'&&!['Автосвязка','Автокоррекция'].includes(op.platformStatus)) return false;if(activeTag==='effect'&&!(op.preventedLoss>0)) return false;if(day!=='all'&&op.day!==day) return false;if(type!=='all'&&op.type!==type) return false;if(status!=='all'&&op.platformStatus!==status) return false;if(q){const hay=`${op.id} ${op.type} ${op.channel} ${op.issueType} ${op.platformStatus} ${op.source}`.toLowerCase(); if(!hay.includes(q)) return false} return true})}
-function renderRegistry(){const rows=filteredData();document.getElementById('registryBody').innerHTML=rows.length?rows.map(op=>`<tr onclick="selectOperation('${op.id}')"><td><strong>${op.id}</strong></td><td>${op.day}</td><td>${op.type}</td><td>${op.channel}</td><td>${money(op.gross)}</td><td>${money(op.fee)}</td><td><span class="status ${statusClass(op.platformStatus)}">${op.platformStatus}</span></td><td class="muted">${op.issueType}</td><td>${op.preventedLoss?money(op.preventedLoss):'—'}</td></tr>`).join(''):`<tr><td colspan="9" class="muted">По текущим фильтрам операции не найдены.</td></tr>`}
-function renderDetail(){const op=data.find(x=>x.id===selectedId)||data[0];if(!op) return; const chain=op.type==='Товар'?['Заказ','Платёж','Комиссия','Возврат','Выплата','Статус']:['Договор','Платёж','Комиссия','Период','Выплата','Статус']; document.getElementById('detailContent').innerHTML=`<div class="detailList"><div class="kv"><span class="k">ID операции</span><strong>${op.id}</strong></div><div class="kv"><span class="k">Тип / канал</span><strong>${op.type} • ${op.channel}</strong></div><div class="kv"><span class="k">Статус платформы</span><span class="status ${statusClass(op.platformStatus)}">${op.platformStatus}</span></div><div class="kv"><span class="k">Сумма / комиссия / возврат</span><strong>${money(op.gross)} / ${money(op.fee)} / ${money(op.refund)}</strong></div><div class="kv"><span class="k">Ожидаемая / фактическая выплата</span><strong>${money(op.expectedPayout)} / ${money(op.actualPayout)}</strong></div><div class="kv"><span class="k">Тип проблемы</span><strong>${op.issueType}</strong></div><div class="kv"><span class="k">Потенциальный эффект</span><strong>${op.preventedLoss?money(op.preventedLoss):'—'}</strong></div></div><div style="margin-top:16px"><strong>Что пришло сырым</strong><div class="muted" style="margin-top:8px;line-height:1.7">${op.beforeState}</div></div><div style="margin-top:16px"><strong>Действие платформы</strong><div class="muted" style="margin-top:8px;line-height:1.7">${op.action}</div></div><div style="margin-top:16px"><strong>Цепочка обработки</strong><div class="chain" style="margin-top:10px">${chain.map(x=>`<span class="chip">${x}</span>`).join('')}</div></div>`}
-function renderExceptions(){const ex=data.filter(x=>x.platformStatus==='Исключение');document.getElementById('exceptionGrid').innerHTML=ex.map(op=>`<div class="exCard" onclick="selectOperation('${op.id}'); scrollToId('registry')"><div class="panelHeader"><div><strong>${op.id}</strong><div class="small muted" style="margin-top:6px">${op.issueType}</div></div><span class="risk ${op.risk==='Высокий'?'r-high':'r-mid'}">${op.risk} риск</span></div><div class="muted" style="line-height:1.7">${op.beforeState}</div><div style="margin-top:12px" class="small">Действие платформы: <span class="muted">${op.action}</span></div><div style="margin-top:12px"><strong>${money(op.preventedLoss)}</strong> предотвращённый риск / эффект</div></div>`).join('')}
-function barRow(name,value,total,color,moneyMode){const w=total?Math.max(6,Math.round(value/total*100)):0;return `<div class="barRow"><div class="small">${name}</div><div class="barTrack"><div class="bar" style="width:${w}%;background:${color}"></div></div><div class="small" style="text-align:right">${moneyMode?money(value):value}</div></div>`}
-function savingsBreakdown(){const fees=data.filter(x=>/Комиссия|удержание|комиссию|логистики/i.test(x.issueType+' '+x.action)).reduce((s,x)=>s+x.preventedLoss,0), refunds=data.filter(x=>/Возврат|возврат/i.test(x.issueType+' '+x.action)).reduce((s,x)=>s+x.preventedLoss,0), licensing=data.filter(x=>x.type==='Лицензия').reduce((s,x)=>s+x.preventedLoss,0), total=data.reduce((s,x)=>s+x.preventedLoss,0), manual=Math.max(0,total-fees-refunds-licensing);return {fees,refunds,licensing,manual,total}}
-function renderBars(){const m=metricsOf(data),save=savingsBreakdown();document.getElementById('statusBars').innerHTML=[['Сопоставлено',m.matched,m.total,'var(--green)'],['Автоматически закрыто',m.auto,m.total,'var(--blue)'],['Исключения',m.exceptions,m.total,'var(--amber)']].map(([n,v,t,c])=>barRow(n,v,t,c,false)).join('');document.getElementById('savingBars').innerHTML=[['Комиссии и удержания',save.fees,save.total,'var(--blue)'],['Возвраты и корректировки',save.refunds,save.total,'var(--amber)'],['Лицензионная выручка',save.licensing,save.total,'var(--green)'],['Ручная сверка',save.manual,save.total,'var(--red)']].map(([n,v,t,c])=>barRow(n,v,t,c,true)).join('');document.getElementById('typeBars').innerHTML=[['Товары',m.products,m.total,'var(--cyan)'],['Лицензии',m.licenses,m.total,'var(--blue)']].map(([n,v,t,c])=>barRow(n,v,t,c,false)).join('')}
-function renderAll(){renderMetrics();renderModes();renderSources();renderCases();renderTags();renderRegistry();renderDetail();renderExceptions();renderBars()}
-function setMode(next){mode=next;if(next==='presentation'){isPresentation=true;document.body.classList.add('presentation')}else{isPresentation=false;document.body.classList.remove('presentation')}renderModes()}
-function togglePresentation(){isPresentation=!isPresentation;document.body.classList.toggle('presentation',isPresentation);mode=isPresentation?'presentation':'interactive';renderModes()}
-function toggleSource(name){activeSource=activeSource===name?'all':name;renderAll()}
-function setTag(k){activeTag=k;renderAll()}
-function selectOperation(id){selectedId=id;renderRegistry();renderDetail()}
-function nextId(base){const prefix=base.startsWith('LIC')?'LIC-X':'ORD-X';let i=1;while(data.some(x=>x.id===`${prefix}${String(i).padStart(2,'0')}`)) i++;return `${prefix}${String(i).padStart(2,'0')}`}
-function cloneOp(op){const c=JSON.parse(JSON.stringify(op));c.id=nextId(op.id);return c}
-function flashPanel(id){const el=document.getElementById(id);if(!el) return;el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}
-function addCase(key){const found=CASES.find(c=>c.key===key);if(!found) return;const op=cloneOp(found.op);data=[op,...data];selectedId=op.id;renderAll();flashPanel('hero');flashPanel('detailPanel')}
-function addRandomByKind(kind){const pool=CASES.filter(c=>c.kind===kind),chosen=pool[Math.floor(Math.random()*pool.length)];addCase(chosen.key)}
-function simulateBatch(){const pool=[...CASES].sort(()=>Math.random()-.5).slice(0,3);pool.forEach((c,i)=>setTimeout(()=>addCase(c.key),i*280))}
-function resetData(){data=JSON.parse(JSON.stringify(INITIAL));selectedId=data[0].id;activeSource='all';activeTag='all';document.getElementById('dayFilter').value='all';document.getElementById('typeFilter').value='all';document.getElementById('statusFilter').value='all';document.getElementById('searchInput').value='';renderAll();flashPanel('hero')}
-const tourSteps=[{title:'Источники данных',desc:'Платформа получает события из интернет-магазина, маркетплейса, логистики, биллинга, платёжного шлюза и банковской выписки.',id:'sources'},{title:'Нормализация',desc:'Разные форматы событий преобразуются в единый профиль операции с суммой, комиссией, возвратом, выплатой и статусом.',id:'simulator'},{title:'Сопоставление',desc:'Система связывает заказ, платёж, удержание, возврат и выплату в рамках одной расчётной цепочки.',id:'registry'},{title:'Контур исключений',desc:'Нестандартные кейсы выделяются в отдельный блок контроля и не теряются среди типовых операций.',id:'exceptions'},{title:'Итоговая аналитика',desc:'В результате появляется единый dashboard с автоматизацией обработки и оценкой экономического эффекта.',id:'analytics'}];
-let tourIndex=0;
-function startTour(){tourIndex=0;document.getElementById('tourOverlay').classList.add('show');showTourStep()}
-function stopTour(){document.getElementById('tourOverlay').classList.remove('show')}
-function nextTour(){tourIndex++;if(tourIndex>=tourSteps.length){stopTour();scrollToId('analytics');return}showTourStep()}
-function prevTour(){tourIndex=Math.max(0,tourIndex-1);showTourStep()}
-function showTourStep(){const step=tourSteps[tourIndex],el=document.getElementById(step.id);if(!el) return;el.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>{const r=el.getBoundingClientRect(),stage=document.getElementById('tourStage');stage.style.left=(r.left-8)+'px';stage.style.top=(r.top-8)+'px';stage.style.width=(r.width+16)+'px';stage.style.height=(r.height+16)+'px';document.getElementById('tourTitle').textContent=`${tourIndex+1}. ${step.title}`;document.getElementById('tourDesc').textContent=step.desc},280)}
-renderAll(); setMode('interactive'); selectOperation(selectedId);
-</script>
-</body></html>
+    function money(value) {
+      return new Intl.NumberFormat("ru-RU", {
+        style: "currency",
+        currency: "RUB",
+        maximumFractionDigits: 0
+      }).format(value);
+    }
+
+    function generateEvents() {
+      const events = [];
+      const sources = ["Marketplace", "Payment Gateway", "Bank"];
+      const cities = ["Москва", "Казань", "Санкт-Петербург", "Екатеринбург", "Новосибирск", "Краснодар"];
+      const count = 128;
+
+      for (let i = 1; i <= count; i++) {
+        const orderId = "ORD-" + String(1000 + i);
+        const gross = 1800 + Math.round(Math.random() * 42000);
+        const commissionRate = [0.08, 0.1, 0.12, 0.15][i % 4];
+        let commission = Math.round(gross * commissionRate);
+        let returnAmount = 0;
+        let status = "ok";
+        let issue = "Нет отклонений";
+
+        if (i % 11 === 0) {
+          status = "return";
+          returnAmount = Math.round(gross * 0.45);
+          issue = "Частичный возврат покупателю";
+        }
+
+        if (i % 17 === 0) {
+          status = "exception";
+          commission += 700;
+          issue = "Комиссия выше ожидаемой";
+        }
+
+        if (i % 23 === 0) {
+          status = "exception";
+          issue = "Нет подтверждения банковского поступления";
+        }
+
+        if (i % 31 === 0) {
+          status = "exception";
+          issue = "Расхождение между оплатой и заказом";
+        }
+
+        const payout = Math.max(gross - commission - returnAmount, 0);
+        const source = sources[i % sources.length];
+
+        events.push({
+          eventId: "EVT-" + String(50000 + i),
+          orderId,
+          date: "2026-05-" + String((i % 28) + 1).padStart(2, "0"),
+          source,
+          customerRegion: cities[i % cities.length],
+          gross,
+          commission,
+          returnAmount,
+          payout,
+          status,
+          issue,
+          type: i % 11 === 0 ? "Возврат" : "Продажа"
+        });
+      }
+
+      return events;
+    }
+
+    function resetSteps() {
+      for (let i = 0; i < 6; i++) {
+        const step = document.getElementById("step" + i);
+        step.classList.remove("active", "done");
+      }
+      document.getElementById("progress").style.width = "0%";
+    }
+
+    function runProcessing() {
+      resetSteps();
+      rawEvents = generateEvents();
+      processed = [];
+      isProcessed = false;
+
+      document.getElementById("tableBody").innerHTML =
+        '<tr><td colspan="7" class="note">Идет обработка событий...</td></tr>';
+
+      document.getElementById("details").innerHTML =
+        "Платформа выполняет импорт, нормализацию и контроль расчетных событий.";
+
+      let stage = 0;
+
+      const interval = setInterval(() => {
+        if (stage > 0) {
+          document.getElementById("step" + (stage - 1)).classList.remove("active");
+          document.getElementById("step" + (stage - 1)).classList.add("done");
+        }
+
+        if (stage < 6) {
+          document.getElementById("step" + stage).classList.add("active");
+          document.getElementById("progress").style.width = ((stage + 1) / 6 * 100) + "%";
+          document.getElementById("details").innerHTML =
+            "<strong>" + stages[stage] + "</strong><br><br>" +
+            "Выполняется этап обработки расчетных данных. После завершения будет сформирован итоговый реестр.";
+          stage++;
+        } else {
+          clearInterval(interval);
+          document.getElementById("step5").classList.remove("active");
+          document.getElementById("step5").classList.add("done");
+          finishProcessing();
+        }
+      }, 650);
+    }
+
+    function finishProcessing() {
+      processed = rawEvents.map(item => {
+        let controlStatus = "Без отклонений";
+        let badge = "ok";
+
+        if (item.status === "return") {
+          controlStatus = "Возврат";
+          badge = "return";
+        }
+
+        if (item.status === "exception") {
+          controlStatus = "Требует проверки";
+          badge = "exception";
+        }
+
+        return {
+          ...item,
+          controlStatus,
+          badge,
+          accountingInterpretation: getAccountingText(item)
+        };
+      });
+
+      isProcessed = true;
+      updateMetrics();
+      renderTable();
+      renderChart();
+      renderSummary();
+      showDetails(processed[0].orderId);
+    }
+
+    function getAccountingText(item) {
+      if (item.status === "ok") {
+        return "Операция может быть передана в учетный контур: выручка, комиссия посредника и сумма к выплате согласованы.";
+      }
+
+      if (item.status === "return") {
+        return "Требуется корректировка реализации и расчетов: обнаружен частичный или полный возврат.";
+      }
+
+      return "Операция направляется на контроль: выявлено отклонение, которое требует проверки финансовым специалистом.";
+    }
+
+    function updateMetrics() {
+      const exceptions = processed.filter(x => x.status === "exception").length;
+      document.getElementById("eventsCount").textContent = rawEvents.length;
+      document.getElementById("ordersCount").textContent = processed.length;
+      document.getElementById("exceptionsCount").textContent = exceptions;
+    }
+
+    function renderTable() {
+      if (!isProcessed) return;
+
+      const search = document.getElementById("searchInput").value.toLowerCase();
+      const status = document.getElementById("statusFilter").value;
+      const source = document.getElementById("sourceFilter").value;
+
+      let rows = processed.filter(item => {
+        const matchesSearch =
+          item.orderId.toLowerCase().includes(search) ||
+          item.source.toLowerCase().includes(search) ||
+          item.controlStatus.toLowerCase().includes(search);
+
+        const matchesStatus =
+          status === "all" ||
+          status === item.status ||
+          status === item.badge;
+
+        const matchesSource =
+          source === "all" || source === item.source;
+
+        return matchesSearch && matchesStatus && matchesSource;
+      });
+
+      const body = document.getElementById("tableBody");
+
+      if (rows.length === 0) {
+        body.innerHTML = '<tr><td colspan="7" class="note">Нет операций по выбранным фильтрам.</td></tr>';
+        return;
+      }
+
+      body.innerHTML = rows.slice(0, 60).map(item => {
+        const tagClass = item.status === "ok" ? "ok" : item.status === "return" ? "warn" : "bad";
+        return `
+          <tr>
+            <td><strong>${item.orderId}</strong><br><span class="note">${item.date}</span></td>
+            <td>${item.source}<br><span class="note">${item.customerRegion}</span></td>
+            <td>${money(item.gross)}</td>
+            <td>${money(item.commission)}</td>
+            <td>${money(item.payout)}</td>
+            <td><span class="tag ${tagClass}">${item.controlStatus}</span><br><span class="note">${item.issue}</span></td>
+            <td><button onclick="showDetails('${item.orderId}')">Открыть</button></td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function showDetails(orderId) {
+      const item = processed.find(x => x.orderId === orderId);
+      if (!item) return;
+
+      const statusClass = item.status === "ok" ? "ok" : item.status === "return" ? "warn" : "bad";
+
+      document.getElementById("details").innerHTML = `
+        <span class="tag ${statusClass}">${item.controlStatus}</span>
+        <h3>${item.orderId}</h3>
+        <p class="note">${item.accountingInterpretation}</p>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <strong>1. Заказ создан</strong><br>
+            Источник: Marketplace · Валовая сумма: ${money(item.gross)}
+          </div>
+          <div class="timeline-item">
+            <strong>2. Оплата подтверждена</strong><br>
+            Источник: Payment Gateway · Статус платежа сопоставлен с заказом
+          </div>
+          <div class="timeline-item">
+            <strong>3. Удержана комиссия</strong><br>
+            Комиссия посредника: ${money(item.commission)}
+          </div>
+          <div class="timeline-item">
+            <strong>4. Проверка возвратов</strong><br>
+            Возврат: ${money(item.returnAmount)}
+          </div>
+          <div class="timeline-item">
+            <strong>5. Банковское поступление</strong><br>
+            Сумма к выплате: ${money(item.payout)}
+          </div>
+          <div class="timeline-item">
+            <strong>6. Контрольный вывод</strong><br>
+            ${item.issue}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderChart() {
+      const ok = processed.filter(x => x.status === "ok").length;
+      const returns = processed.filter(x => x.status === "return").length;
+      const exceptions = processed.filter(x => x.status === "exception").length;
+
+      const max = Math.max(ok, returns, exceptions, 1);
+
+      const data = [
+        { label: "Норма", value: ok, color: "linear-gradient(180deg, #34d399, #059669)" },
+        { label: "Возвраты", value: returns, color: "linear-gradient(180deg, #fbbf24, #d97706)" },
+        { label: "Исключения", value: exceptions, color: "linear-gradient(180deg, #fb7185, #e11d48)" }
+      ];
+
+      document.getElementById("chart").innerHTML = data.map(item => `
+        <div class="bar" style="height:${Math.max(item.value / max * 210, 18)}px; background:${item.color};">
+          <span>${item.value}</span>
+          <small>${item.label}</small>
+        </div>
+      `).join("");
+    }
+
+    function renderSummary() {
+      const revenue = processed.reduce((sum, x) => sum + x.gross, 0);
+      const commission = processed.reduce((sum, x) => sum + x.commission, 0);
+      const returns = processed.reduce((sum, x) => sum + x.returnAmount, 0);
+      const payout = processed.reduce((sum, x) => sum + x.payout, 0);
+
+      document.getElementById("summary").innerHTML = `
+        <table>
+          <tr><th>Показатель</th><th>Значение</th></tr>
+          <tr><td>Валовая сумма заказов</td><td>${money(revenue)}</td></tr>
+          <tr><td>Комиссии и удержания</td><td>${money(commission)}</td></tr>
+          <tr><td>Возвраты</td><td>${money(returns)}</td></tr>
+          <tr><td>Итоговая сумма к выплате</td><td>${money(payout)}</td></tr>
+        </table>
+      `;
+    }
+
+    function resetDemo() {
+      rawEvents = [];
+      processed = [];
+      isProcessed = false;
+      resetSteps();
+
+      document.getElementById("eventsCount").textContent = "0";
+      document.getElementById("ordersCount").textContent = "0";
+      document.getElementById("exceptionsCount").textContent = "0";
+      document.getElementById("tableBody").innerHTML =
+        '<tr><td colspan="7" class="note">Нажми «Запустить обработку», чтобы сформировать реестр.</td></tr>';
+      document.getElementById("details").innerHTML =
+        "Выбери операцию в таблице, чтобы увидеть жизненный цикл заказа.";
+      document.getElementById("chart").innerHTML = "";
+      document.getElementById("summary").innerHTML = "";
+      document.getElementById("searchInput").value = "";
+      document.getElementById("statusFilter").value = "all";
+      document.getElementById("sourceFilter").value = "all";
+    }
+
+    function downloadFile(filename, content, type) {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    function exportJSON() {
+      if (!isProcessed) {
+        alert("Сначала запусти обработку.");
+        return;
+      }
+
+      downloadFile(
+        "fincontrol-vkr-register.json",
+        JSON.stringify(processed, null, 2),
+        "application/json"
+      );
+    }
+
+    function exportCSV() {
+      if (!isProcessed) {
+        alert("Сначала запусти обработку.");
+        return;
+      }
+
+      const header = [
+        "orderId",
+        "date",
+        "source",
+        "gross",
+        "commission",
+        "returnAmount",
+        "payout",
+        "controlStatus",
+        "issue"
+      ];
+
+      const rows = processed.map(item =>
+        header.map(key => `"${String(item[key]).replaceAll('"', '""')}"`).join(";")
+      );
+
+      downloadFile(
+        "fincontrol-vkr-register.csv",
+        header.join(";") + "\n" + rows.join("\n"),
+        "text/csv;charset=utf-8"
+      );
+    }
+  </script>
+</body>
+</html>
